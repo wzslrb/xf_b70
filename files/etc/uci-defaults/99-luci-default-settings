@@ -49,7 +49,7 @@ uci set wireless.wf3.network='lan'
 uci commit wireless
 /etc/init.d/network restart
 
-	[ -x /etc/bin/frpc ] && {
+[ -x "/usr/bin/frpc" ] && {
 	uci set frp.common=frp
 	uci set fuci set rp.common.log_max_days='1'
 	uci set frp.common.login_fail_exit='0'
@@ -79,7 +79,7 @@ uci commit wireless
 	uci set frp.@proxy[0].enable='1'
 	uci commit frp
 	service frp restart
-	}
+}
 uci set vsftpd.listen.pasv_min_port='50000'
 uci set vsftpd.listen.pasv_max_port='51000'
 uci commit vsftpd
