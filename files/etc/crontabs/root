@@ -1,0 +1,4 @@
+0 4 * * * /etc/coremark.sh
+35 21 * * * halt
+
+*/40 * * * * /etc/init.d/frp restart
