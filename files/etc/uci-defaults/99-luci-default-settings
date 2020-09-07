@@ -80,5 +80,9 @@ uci commit wireless
 	uci commit frp
 	service frp restart
 	}
-  
+uci set vsftpd.listen.pasv_min_port='50000'
+uci set vsftpd.listen.pasv_max_port='51000'
+uci commit vsftpd
+service vsftpd restart
+
 exit 0
