@@ -85,4 +85,6 @@ uci set vsftpd.listen.pasv_max_port='51000'
 uci commit vsftpd
 service vsftpd restart
 
+#主机短别名
+sed 's/.*localhost ip6.*/& h/g' /etc/hosts
 exit 0
