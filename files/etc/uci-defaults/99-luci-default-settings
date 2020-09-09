@@ -84,7 +84,15 @@ uci set vsftpd.listen.pasv_min_port='50000'
 uci set vsftpd.listen.pasv_max_port='51000'
 uci commit vsftpd
 service vsftpd restart
-
+[ -x "/etc/init.d/wifidogx" ] && {
+	#第二行后面插入pwd
+	#apfree-wifidog_4.08.1771-4 修复bug
+	#sed -i '2apwd' /etc/init.d/wifidogx
+	sed -i '/" "disabled"/s/0/1/g' /etc/init.d/wifidogx
+	sed -i '/= "0" ]; then/s/0/1/g' /etc/init.d/wifidogx
+	sed -i '/if.*APFREE_/s/-s/! &/g' /etc/init.d/wifidogx
+	sed -i '/if.*APFREE_/s/\&/|/g' /etc/init.d/wifidogx
+｝
 #主机短别名
 sed -i 's/.*localhost ip6.*/& h/g' /etc/hosts
 exit 0
