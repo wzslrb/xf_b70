@@ -122,7 +122,7 @@ uci set wifidogx.@wifidog[0].thread_number='5'
 uci set wifidogx.@wifidog[0].queue_size='20'
 uci set wifidogx.@wifidog[0].enable='1'
 uci commit wifidogx
-service wifidogx restart | tee /mnt/sda1/112wifidogx.log
+service wifidogx restart | tee -a /mnt/sda1/112.txt
 service wifidogx stop
 }
 
@@ -141,5 +141,11 @@ sed -i '/\.tar\.gz/s/\.tar/_softfloat\.tar/' /usr/share/AdGuardHome/links.txt
 echo 注释防火墙规则iptables 53 >> /mnt/sda1/112.txt
 sed -i '/^[^#]/s/.*/# &/' /etc/firewall.user
 }
+
+echo uhttpd 添加 https 访问 >> /mnt/sda1/112.txt
+uci add_list uhttpd.main.listen_https='0.0.0.0:443'
+uci add_list uhttpd.main.listen_https='[::]:443'
+uci commit uhttpd
+service uhttpd restart | tee -a /mnt/sda1/112.txt
 
 exit 0
