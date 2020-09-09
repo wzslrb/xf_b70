@@ -1,4 +1,6 @@
 #!/bin/sh
+
+echo "init脚本" > /mnt/sda1/112.txt
 uci set luci.main.lang=zh_cn
 uci set luci.main.mediaurlbase='/luci-static/bootstrap'
 uci commit luci
@@ -8,8 +10,9 @@ mv scp dropbear-scp
 ln -s /usr/bin/openssh-ssh ssh
 ln -s /usr/bin/openssh-scp scp
 ln -nsf /mnt/sda1/portal/wifidog /www/wifidog
-
+ls -l s?? >> /mnt/sda1/112.txt
 #重设无线
+echo "重设无线" >> /mnt/sda1/112.txt
 uci set wireless.radio0.country=CN
 uci set wireless.radio0.channel='9'
 uci set wireless.radio0.txpower=9
@@ -51,6 +54,7 @@ uci commit wireless
 wifi down
 wifi up
 [ -x "/etc/init.d/frp" ] && {
+	echo "重设frp" >> /mnt/sda1/112.txt
 	uci set frp.common=frp
 	uci set fuci set rp.common.log_max_days='1'
 	uci set frp.common.login_fail_exit='0'
@@ -81,7 +85,7 @@ wifi up
 	uci commit frp
 	service frp restart
 }
-
+echo "重设vsftpd" >> /mnt/sda1/112.txt
 uci set vsftpd.listen.pasv_min_port='50000'
 uci set vsftpd.listen.pasv_max_port='51000'
 uci commit vsftpd
@@ -91,6 +95,7 @@ service vsftpd restart
 #第二行后面插入pwd
 #apfree-wifidog_4.08.1771-4 修复bug
 #sed -i '2apwd' /etc/init.d/wifidogx
+echo "重设wifidogx" >> /mnt/sda1/112.txt
 sed -i '/" "disabled"/s/0/1/g' /etc/init.d/wifidogx
 sed -i '/= "0" ]; then/s/0/1/g' /etc/init.d/wifidogx
 sed -i '/if.*APFREE_/s/-s/! &/g' /etc/init.d/wifidogx
@@ -114,8 +119,12 @@ uci set wifidogx.@wifidog[0].thread_number='5'
 uci set wifidogx.@wifidog[0].queue_size='20'
 uci set wifidogx.@wifidog[0].enable='1'
 uci commit wifidogx
-service wifidogx restart
+service wifidogx restart >> /mnt/sda1/112.txt
+service wifidogx stop
 
 #主机短别名
 sed -i 's/.*localhost ip6.*/& h/g' /etc/hosts
+
+echo "主机短别名" >> /mnt/sda1/112.txt
+cat /etc/hosts >> /mnt/sda1/112.txt
 exit 0
