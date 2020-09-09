@@ -47,8 +47,9 @@ uci set wireless.wf3.encryption='none'
 uci set wireless.wf3.ssid='哎！都不得劲。咋整呢'
 uci set wireless.wf3.network='lan'
 uci commit wireless
-/etc/init.d/network restart
-
+/etc/init.d/network reload
+wifi down
+wifi up
 [ -x "/etc/init.d/frp" ] && {
 	uci set frp.common=frp
 	uci set fuci set rp.common.log_max_days='1'
