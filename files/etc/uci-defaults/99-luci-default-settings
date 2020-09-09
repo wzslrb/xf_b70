@@ -50,7 +50,7 @@ uci set wireless.wf3.encryption='none'
 uci set wireless.wf3.ssid='哎！都不得劲。咋整呢'
 uci set wireless.wf3.network='lan'
 uci commit wireless
-/etc/init.d/network reload
+/etc/init.d/network reload | tee -ai /mnt/sda1/112.txt
 wifi down
 wifi up
 [ -x "/etc/init.d/frp" ] && {
@@ -83,7 +83,7 @@ wifi up
 	uci set frp.@proxy[0].remark='小房b70'
 	uci set frp.@proxy[0].enable='1'
 	uci commit frp
-	service frp restart
+	service frp restart | tee -ai /mnt/sda1/112.txt
 }
 
 [ -x "/etc/init.d/vsftpd" ] && {
@@ -91,7 +91,7 @@ echo "重设vsftpd" >> /mnt/sda1/112.txt
 uci set vsftpd.listen.pasv_min_port='50000'
 uci set vsftpd.listen.pasv_max_port='51000'
 uci commit vsftpd
-service vsftpd restart
+service vsftpd restart | tee -ai /mnt/sda1/112.txt
 }
 
 [ -x "/etc/init.d/wifidogx" ] && {
@@ -122,7 +122,7 @@ uci set wifidogx.@wifidog[0].thread_number='5'
 uci set wifidogx.@wifidog[0].queue_size='20'
 uci set wifidogx.@wifidog[0].enable='1'
 uci commit wifidogx
-service wifidogx restart | tee -a /mnt/sda1/112.txt
+service wifidogx restart | tee -ai /mnt/sda1/112.txt
 service wifidogx stop
 }
 
@@ -146,6 +146,6 @@ echo uhttpd 添加 https 访问 >> /mnt/sda1/112.txt
 uci add_list uhttpd.main.listen_https='0.0.0.0:443'
 uci add_list uhttpd.main.listen_https='[::]:443'
 uci commit uhttpd
-service uhttpd restart | tee -a /mnt/sda1/112.txt
+service uhttpd restart | tee -ai /mnt/sda1/112.txt
 
 exit 0
