@@ -130,10 +130,16 @@ service wifidogx stop
 sed -i 's/.*localhost ip6.*/& h/g' /etc/hosts
 
 echo "主机短别名" >> /mnt/sda1/112.txt
-cat /etc/hosts >> /mnt/sda1/112.txt
+#cat /etc/hosts >> /mnt/sda1/112.txt
 
 [ -s "/usr/share/AdGuardHome/links.txt" ] && {
-echo 更新AdGuard Home升级路径
+echo 更新AdGuard Home升级路径 >> /mnt/sda1/112.txt
 sed -i '/\.tar\.gz/s/\.tar/_softfloat\.tar/' /usr/share/AdGuardHome/links.txt
 }
+
+[ -s "/etc/firewall.user" ] && {
+echo 注释防火墙规则iptables 53 >> /mnt/sda1/112.txt
+sed -i '/^[^#]/s/.*/# &/' /etc/firewall.user
+}
+
 exit 0
