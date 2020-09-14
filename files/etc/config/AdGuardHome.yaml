@@ -28,13 +28,17 @@ dns:
   ratelimit_whitelist: []
   refuse_any: true
   upstream_dns:
-  - 192.168.1.1
-  - 114.114.114.114
-  - 114.114.115.115
+  - https://dns.adguard.com/dns-query
+  - https://dns-family.adguard.com/dns-query
+  - https://dns.alidns.com/dns-query
+  - https://rubyfish.cn/dns-query
+  - https://i.233py.com/dns-query
   bootstrap_dns:
-  - 192.168.1.1
-  - 114.114.114.114
-  - 114.114.115.115
+  - 202.141.162.123:5353
+  - 202.38.93.153:5353
+  - 208.67.222.222:5353
+  - 114.114.114.114:5353
+  - 114.114.115.115:5353
   all_servers: false
   fastest_addr: false
   allowed_clients: []
@@ -71,22 +75,14 @@ tls:
   certificate_path: ""
   private_key_path: ""
 filters:
-- enabled: false
-  url: https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
-  name: AdGuard Simplified Domain Names filter
-  id: 1
-- enabled: false
-  url: https://adaway.org/hosts.txt
-  name: AdAway
-  id: 2
-- enabled: false
-  url: https://www.malwaredomainlist.com/hostslist/hosts.txt
-  name: MalwareDomainList.com Hosts List
-  id: 4
 - enabled: true
   url: https://anti-ad.net/easylist.txt
   name: anti-AD
   id: 1597731292
+- enabled: true
+  url: https://easylist-downloads.adblockplus.org/easylistchina.txt
+  name: EasyList China
+  id: 1600075528
 whitelist_filters: []
 user_rules:
 - allyes.com
