@@ -1,5 +1,7 @@
 #!/bin/sh
 
+[ ! -f /mnt/sda1/112.txt ] && touch /mnt/sda1/112.txt
+
 [ -f "/etc/config/wireless" ] || exit 0
 echo "重设无线" >> /mnt/sda1/112.txt
 uci -q batch <<-EOF >/dev/null
@@ -44,3 +46,4 @@ EOF
 /etc/init.d/network reload | tee -ai /mnt/sda1/112.txt
 wifi down
 wifi up
+exit 0
