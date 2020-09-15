@@ -8,6 +8,10 @@ uci set network.lan._orig_ifname='lan1 lan3 ra0 rai0 wlan0'
 uci set network.lan._orig_bridge='true'
 uci set network.lan.ipaddr='192.168.200.1'
 uci set network.lan.ifname='lan1 lan3'
+uci delete dhcp.lan.dhcpv6
+uci delete dhcp.lan.ra
+uci delete dhcp.lan.ra_slaac
+uci delete dhcp.lan.ra_flags
 
 uci set network.lcrm2=interface
 uci set network.lcrm2.type='bridge'
