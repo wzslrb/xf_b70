@@ -21,3 +21,12 @@ uci set sqm.@queue[0].enabled='1'
 uci commit sqm
 service sqm restart
 }
+[ -f "/etc/config/AdGuardHome" ] && {
+echo "重设AdGuardHome" >> /mnt/sda1/112.txt
+uci set AdGuardHome.@AdGuardHome[0].old_port='8400'
+uci set AdGuardHome.@AdGuardHome[0].httpport='3600'
+uci set AdGuardHome.@AdGuardHome[0].enabled='1'
+#uci set AdGuardHome.@AdGuardHome[0].configpath='/etc/config/AdGuardHome.yaml'
+uci commit AdGuardHome
+service AdGuardHome stop
+}
