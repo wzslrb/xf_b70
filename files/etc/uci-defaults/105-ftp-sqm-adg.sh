@@ -30,3 +30,8 @@ uci set AdGuardHome.@AdGuardHome[0].enabled='1'
 uci commit AdGuardHome
 service AdGuardHome stop
 }
+
+[ -s "/usr/share/AdGuardHome/links.txt" ] && {
+echo 更新AdGuard Home升级路径 >> /mnt/sda1/112.txt
+sed -i '/\.tar\.gz/s/\.tar/_softfloat\.tar/' /usr/share/AdGuardHome/links.txt
+}
