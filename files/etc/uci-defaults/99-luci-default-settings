@@ -4,21 +4,16 @@ echo "init脚本" > /mnt/sda1/112.txt
 uci set luci.main.lang=zh_cn
 uci set luci.main.mediaurlbase='/luci-static/bootstrap'
 uci commit luci
+uci set system.@system[0].hostname='B70'
+uci commit system
+#重建ssh链接
 cd /usr/bin
 mv ssh dropbear-ssh
 mv scp dropbear-scp
 ln -s /usr/bin/openssh-ssh ssh
 ln -s /usr/bin/openssh-scp scp
-
+#重建apfee目录
 [ -d "/mnt/sda1/portal/wifidog" ] && ln -nsf /mnt/sda1/portal/wifidog /www/wifidog
-
-[ -x "/etc/init.d/vsftpd" ] && {
-echo "重设vsftpd" >> /mnt/sda1/112.txt
-uci set vsftpd.listen.pasv_min_port='50000'
-uci set vsftpd.listen.pasv_max_port='51000'
-uci commit vsftpd
-service vsftpd restart | tee -ai /mnt/sda1/112.txt
-}
 
 #主机短别名
 sed -i 's/.*localhost ip6.*/& h/g' /etc/hosts
