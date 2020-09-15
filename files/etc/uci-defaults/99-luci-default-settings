@@ -35,4 +35,7 @@ sed -i '/^root/s/.*/root:$1$VZ4w9Iwy$J0\/V2CNV1HoKG9DAHlPrn1:18506:0:99999:7:::/
 echo 启动aria2 >> /mnt/sda1/112.txt
 service aria2 enable
 service aria2 restart
+#修改证书权限
+chmod 0400 /etc/dropbear/id_rsa
+
 exit 0
