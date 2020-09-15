@@ -37,3 +37,5 @@ EOF
 
 service wifidogx restart | tee -ai /mnt/sda1/112.txt
 service wifidogx stop
+
+exit 0
