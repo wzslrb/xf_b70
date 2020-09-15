@@ -1,5 +1,7 @@
 #!/bin/sh
 
+[ ! -f /mnt/sda1/112.txt ] && touch /mnt/sda1/112.txt
+echo "初始化network" >> /mnt/sda1/112.txt
 uci -q batch <<-EOF >/dev/null
 	set network.lan=interface
 	set network.lan.type='bridge'
@@ -33,3 +35,4 @@ uci -q batch <<-EOF >/dev/null
 	commit network
 EOF
 service network restart
+exit 0
