@@ -16,8 +16,8 @@ ln -s /usr/bin/openssh-scp scp
 [ -d "/mnt/sda1/portal/wifidog" ] && ln -nsf /mnt/sda1/portal/wifidog /www/wifidog
 
 #主机短别名
-sed -i 's/.*localhost ip6.*/& h/g' /etc/hosts
-
+#sed -i 's/.*localhost ip6.*/& h/g' /etc/hosts
+#echo -e '192.168.199.1\th' >> /etc/hosts
 echo "主机短别名" >> /mnt/sda1/112.txt
 #cat /etc/hosts >> /mnt/sda1/112.txt
 
