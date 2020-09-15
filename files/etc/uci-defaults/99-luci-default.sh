@@ -1,6 +1,7 @@
 #!/bin/sh
 
-echo "init脚本" > /mnt/sda1/112.txt
+[ ! -f /mnt/sda1/112.txt ] && touch /mnt/sda1/112.txt
+echo "init脚本" >> /mnt/sda1/112.txt
 uci set luci.main.lang=zh_cn
 uci set luci.main.mediaurlbase='/luci-static/bootstrap'
 uci commit luci
