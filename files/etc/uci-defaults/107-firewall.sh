@@ -1,6 +1,12 @@
 #!/bin/sh
 
-echo 防火墙规则 >> /mnt/sda1/112.txt
+[ -s "/etc/firewall.user" ] && {
+echo 注释防火墙转发规则iptables 53 >> /mnt/sda1/112.txt
+sed -i '/^[^#]/s/.*/# &/' /etc/firewall.user
+service firewall reload | tee -ai /mnt/sda1/112.txt
+} 
+
+echo 防火墙rule规则 >> /mnt/sda1/112.txt
 
 uci set firewall.web=rule
 uci set firewall.web.target='ACCEPT'
