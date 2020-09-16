@@ -49,4 +49,4 @@ uci -q batch <<-EOF >/dev/null
 	commit samba
 EOF
 
-service samba restart
+#service samba restart
