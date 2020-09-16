@@ -3,7 +3,7 @@
 [ -s "/etc/firewall.user" ] && {
 echo 注释防火墙转发规则iptables 53 >> /mnt/sda1/112.txt
 sed -i '/^[^#]/s/.*/# &/' /etc/firewall.user
-service firewall reload | tee -ai /mnt/sda1/112.txt
+#service firewall reload | tee -ai /mnt/sda1/112.txt
 } 
 
 echo 防火墙rule规则 >> /mnt/sda1/112.txt
@@ -58,4 +58,4 @@ uci set firewall.vsftpd.dest_port='21 50000-51000'
 uci set firewall.vsftpd.name='ftp共享'
 
 uci commit firewall
-service firewall reload
+#service firewall reload
