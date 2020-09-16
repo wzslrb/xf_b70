@@ -26,7 +26,8 @@ echo "重设AdGuardHome" >> /mnt/sda1/112.txt
 uci set AdGuardHome.@AdGuardHome[0].old_port='8400'
 uci set AdGuardHome.@AdGuardHome[0].httpport='3600'
 uci set AdGuardHome.@AdGuardHome[0].enabled='1'
-#uci set AdGuardHome.@AdGuardHome[0].configpath='/etc/config/AdGuardHome.yaml'
+uci set AdGuardHome.@AdGuardHome[0].waitonboot='1'
+uci set AdGuardHome.@AdGuardHome[0].configpath='/etc/config/AdG112.yaml'
 uci commit AdGuardHome
 service AdGuardHome stop
 }
