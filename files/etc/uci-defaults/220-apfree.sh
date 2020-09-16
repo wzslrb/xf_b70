@@ -7,7 +7,7 @@ if [ "$(opkg list-installed | grep "^apfree" | sed "/^apfree/s/.*- //g")" != "3.
 	exit 0
 fi
 
-[ ! -f /etc/config/wifidogx ] && ( block detect > /etc/config/wifidogx )
+[ ! -f /etc/config/wifidogx ] && touch /etc/config/wifidogx
 
 #第二行后面插入pwd
 #apfree-wifidog_4.08.1771-4 修复bug
