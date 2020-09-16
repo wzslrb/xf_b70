@@ -52,13 +52,13 @@ uci -q batch <<-EOF >/dev/null
 	set dhcp.lcrm2.interface='lcrm2'
 	commit dhcp
 EOF
-service dnsmasq restart
+#service dnsmasq restart
 
 echo "初始化防火墙wan2 lcrm2" >> /mnt/sda1/112.txt
 uci add_list firewall.@zone[0].network='lcrm2'
 uci add_list firewall.@zone[1].network='wan2'
 uci commit firewall
-service firewall reload
+#service firewall reload
 
 echo "重设无线" >> /mnt/sda1/112.txt
 uci -q batch <<-EOF >/dev/null
@@ -100,7 +100,9 @@ uci -q batch <<-EOF >/dev/null
 	set wireless.wf3.network='lan'
 	commit wireless
 EOF
-/etc/init.d/network reload | tee -ai /mnt/sda1/112.txt
-wifi down
-wifi up
+echo "重设无线 cp wireless /mnt/sda1/temp/" >> /mnt/sda1/112.txt
+cp -rfp /etc/config/wireless /mnt/sda1/temp/
+#/etc/init.d/network reload | tee -ai /mnt/sda1/112.txt
+#wifi down
+#wifi up
 exit 0
