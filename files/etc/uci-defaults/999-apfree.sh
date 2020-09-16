@@ -41,7 +41,7 @@ uci -q batch <<-EOF >/dev/null
 	 commit wifidogx
 EOF
 
-service wifidogx restart | tee -ai /mnt/sda1/112.txt
+service wifidogx restart 2 >> /mnt/sda1/112.txt
 service wifidogx stop
 
 exit 0
