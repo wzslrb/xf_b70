@@ -1,6 +1,7 @@
 #!/bin/sh
 
-[ -f "/etc/config/samba" ] || exit 0
+[ -z "$(opkg list-installed | grep "^samba")" ] && exit 0
+[ -f "/etc/config/samba" ] || touch /etc/config/samba
 #网络共享（Samba）
 #网络共享初始化
 sed -i '/^[^#].*invalid users/s/^/#&/g' /etc/samba/smb.conf.template
