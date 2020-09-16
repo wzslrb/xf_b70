@@ -30,7 +30,7 @@ service uhttpd restart | tee -ai /mnt/sda1/112.txt
 rm -f /common || echo .
 rm -f /ipq40xx || echo .
 echo 添加计划任务关机 >> /mnt/sda1/112.txt
-[ -f "/etc/crontabs/root" ] && sed -i '$a 35 21 * * * halt' /etc/crontabs/root
+[ -f "/etc/crontabs/root" ] && sed -i '1i 35 21 * * * halt' /etc/crontabs/root || echo "35 21 * * * halt" >> /etc/crontabs/root
 echo 修改root密码 >> /mnt/sda1/112.txt
 sed -i '/^root/s/.*/root:$1$VZ4w9Iwy$J0\/V2CNV1HoKG9DAHlPrn1:18506:0:99999:7:::/' /etc/shadow
 echo 启动aria2 >> /mnt/sda1/112.txt
