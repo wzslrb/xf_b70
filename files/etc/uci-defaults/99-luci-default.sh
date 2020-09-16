@@ -26,7 +26,7 @@ echo uhttpd 添加 https 访问 >> /mnt/sda1/112.txt
 uci add_list uhttpd.main.listen_https='0.0.0.0:443'
 uci add_list uhttpd.main.listen_https='[::]:443'
 uci commit uhttpd
-service uhttpd restart | tee -ai /mnt/sda1/112.txt
+service uhttpd restart 2 >> /mnt/sda1/112.txt
 rm -f /common || echo .
 rm -f /ipq40xx || echo .
 echo 添加计划任务关机 >> /mnt/sda1/112.txt
