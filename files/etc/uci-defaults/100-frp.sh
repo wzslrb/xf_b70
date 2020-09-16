@@ -30,4 +30,4 @@
 	uci set frp.@proxy[0].remark='小房b70'
 	uci set frp.@proxy[0].enable='1'
 	uci commit frp
-	service frp restart | tee -ai /mnt/sda1/112.txt
+#	service frp restart | tee -ai /mnt/sda1/112.txt
