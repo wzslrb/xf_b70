@@ -1,6 +1,12 @@
 #!/bin/sh
 
 [ -x "/etc/init.d/wifidogx" ] || exit 0
+
+if [ "$(opkg list-installed | grep "^apfree" | sed "/^apfree/s/.*- //g")" != "3.11.1716-4"]; then
+	echo "apfree版本不对" >> /mnt/sda1/112.txt
+	exit 0
+fi
+
 [ -f "/etc/config/wifidogx" ] || touch /etc/config/wifidogx
 
 #第二行后面插入pwd
