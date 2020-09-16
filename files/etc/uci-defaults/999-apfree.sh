@@ -42,6 +42,6 @@ uci -q batch <<-EOF >/dev/null
 EOF
 
 service wifidogx restart 2 >> /mnt/sda1/112.txt
-service wifidogx stop
+service wifidogx disable
 
 exit 0
