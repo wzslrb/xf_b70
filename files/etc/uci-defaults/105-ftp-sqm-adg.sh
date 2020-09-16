@@ -5,7 +5,7 @@ echo "重设vsftpd" >> /mnt/sda1/112.txt
 uci set vsftpd.listen.pasv_min_port='50000'
 uci set vsftpd.listen.pasv_max_port='51000'
 uci commit vsftpd
-service vsftpd restart | tee -ai /mnt/sda1/112.txt
+service vsftpd restart 2 >> /mnt/sda1/112.txt
 }
 
 [ -f "/etc/config/sqm" ] && {
