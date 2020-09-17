@@ -1,7 +1,5 @@
 #!/bin/sh
 
-[ ! -f /mnt/sda1/112.txt ] && touch /mnt/sda1/112.txt
-echo "初始化network" >> /mnt/sda1/112.txt
 uci -q batch <<-EOF >/dev/null
 	set network.lan=interface
 	set network.lan.type='bridge'
@@ -36,7 +34,6 @@ uci -q batch <<-EOF >/dev/null
 EOF
 #service network restart
 
-echo "初始化dhcp" >> /mnt/sda1/112.txt
 uci -q batch <<-EOF >/dev/null
 	set dhcp.lan=dhcp
 	set dhcp.lan.interface='lan'
@@ -53,14 +50,21 @@ uci -q batch <<-EOF >/dev/null
 	commit dhcp
 EOF
 #service dnsmasq restart
+logger -t "【网络】" "初始化network dhcp"
 
-echo "初始化防火墙wan2 lcrm2" >> /mnt/sda1/112.txt
 uci add_list firewall.@zone[0].network='lcrm2'
 uci add_list firewall.@zone[1].network='wan2'
 uci commit firewall
 #service firewall reload
+logger -t "【网络】" "初始化防火墙wan2 lcrm2"
 
 echo "重设无线" >> /mnt/sda1/112.txt
+
+[ -f "/etc/config/wireless" ] || {
+	logger -t "【网络】" "重设无线失败，没有配置文件"
+	#touch /etc/config/wireless
+	exit 0
+}
 uci -q batch <<-EOF >/dev/null
 	set wireless.radio0.country=CN
 	set wireless.radio0.channel='9'
@@ -100,8 +104,7 @@ uci -q batch <<-EOF >/dev/null
 	set wireless.wf3.network='lan'
 	commit wireless
 EOF
-echo "重设无线 cp wireless /mnt/sda1/temp/" >> /mnt/sda1/112.txt
-cp -rfp /etc/config/wireless /mnt/sda1/temp/
+logger -t "【网络】" "重设无线配置文件"
 #/etc/init.d/network reload | tee -ai /mnt/sda1/112.txt
 #wifi down
 #wifi up

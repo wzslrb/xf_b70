@@ -1,14 +1,18 @@
 #!/bin/sh
 
-[ -z "$(opkg list-installed | grep "^samba")" ] && exit 0
-[ -f "/etc/config/samba" ] || touch /etc/config/samba
-#网络共享（Samba）
-#网络共享初始化
+[ -z "$(opkg list-installed | grep "^samba")" ] && {
+	logger -t "【共享（Samba）】" "错误，未安装samba"
+	exit 0
+}
+[ -f "/etc/config/samba" ] || {
+	logger -t "【共享（Samba）】" "新建/etc/config/samba"
+	touch /etc/config/samba
+}
+
 sed -i '/^[^#].*invalid users/s/^/#&/g' /etc/samba/smb.conf.template
 sed -i '/bind interfaces only/s/only.*/only = off/g' /etc/samba/smb.conf.template
-#添加密码root 12
-#smbpasswd -a root
 echo "root:0:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:7E095E67AE53F77921B9C97FFAADB43F:[U          ]:LCT-00000001:" > /etc/samba/smbpasswd
+logger -t "【共享（Samba）】" "修改smb.conf.template及添加密码"
 
 uci -q batch <<-EOF >/dev/null
 	delete samba.@samba[0]
@@ -48,5 +52,6 @@ uci -q batch <<-EOF >/dev/null
 	set samba.sh3.dir_mask='0777'
 	commit samba
 EOF
-
+logger -t "【共享（Samba）】" "添加diy共享配置"
 #service samba restart
+exit 0
