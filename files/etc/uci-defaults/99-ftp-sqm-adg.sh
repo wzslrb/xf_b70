@@ -19,15 +19,23 @@ uci set sqm.@queue[0].enabled='1'
 uci commit sqm
 echo "$(TZ=CST-8 date +'%D %T')【FSA】-重设sqm" >> /mnt/sda1/112.txt
 }
+
+[ -d /mnt/sda1/lost\+found/AdGuardHome ] && {
+	[ -d /usr/bin/AdGuardHome ] && rm -rf /usr/bin/AdGuardHome
+	ln -nsf /mnt/sda1/lost\+found/AdGuardHome /usr/bin/AdGuardHome
+	echo "【FSA】-重设AdGuardHome目录链接" >> /mnt/sda1/112.txt
+}
+
 [ -f "/etc/config/AdGuardHome" ] && {
-echo "重设AdGuardHome" >> /mnt/sda1/112.txt
-uci set AdGuardHome.@AdGuardHome[0].old_port='8400'
-uci set AdGuardHome.@AdGuardHome[0].httpport='3600'
-uci set AdGuardHome.@AdGuardHome[0].enabled='0'
-uci set AdGuardHome.@AdGuardHome[0].waitonboot='1'
-uci set AdGuardHome.@AdGuardHome[0].redirect='redirect'
-uci set AdGuardHome.@AdGuardHome[0].configpath='/etc/config/AdG112.yaml'
-uci commit AdGuardHome
+uci -q batch <<-EOF >/dev/null
+	set AdGuardHome.@AdGuardHome[0].old_port='8400'
+	set AdGuardHome.@AdGuardHome[0].httpport='3600'
+	set AdGuardHome.@AdGuardHome[0].enabled='0'
+	set AdGuardHome.@AdGuardHome[0].waitonboot='1'
+	set AdGuardHome.@AdGuardHome[0].redirect='redirect'
+	set AdGuardHome.@AdGuardHome[0].configpath='/usr/bin/AdGuardHome/AdG112.yaml'
+	commit AdGuardHome
+EOF
 echo "$(TZ=CST-8 date +'%D %T')【FSA】-重设AdGuardHome" >> /mnt/sda1/112.txt
 }
 

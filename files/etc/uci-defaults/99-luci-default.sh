@@ -17,9 +17,6 @@ ln -s /usr/bin/openssh-ssh ssh
 ln -s /usr/bin/openssh-scp scp
 echo "$(TZ=CST-8 date +'%D %T')【初始化】-更新ssh链接" >> /mnt/sda1/112.txt
 
-#重建apfee目录
-[ -d "/mnt/sda1/portal/wifidog" ] && ln -nsf /mnt/sda1/portal/wifidog /www/wifidog
-echo "$(TZ=CST-8 date +'%D %T')【初始化】-重建apfee目录" >> /mnt/sda1/112.txt
 
 #主机短别名
 sed -i 's/.*localhost ip6.*/& h/g' /etc/hosts

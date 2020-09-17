@@ -44,8 +44,12 @@ echo "$(TZ=CST-8 date +'%D %T')【无线】-重设无线配置文件" >> /mnt/sd
 }
 else
 {
-	echo "$(TZ=CST-8 date +'%D %T')【无线】-重设无线失败，没有配置文件" >> /mnt/sda1/112.txt
-	#touch /etc/config/wireless
+	echo "$(TZ=CST-8 date +'%D %T')【无线】-★★★★★没有配置文件" >> /mnt/sda1/112.txt
+	[ -f /mnt/sda1/lost\+found/wireless ] && {
+	cp -pf /mnt/sda1/lost\+found/wireless /etc/config/
+	echo "$(TZ=CST-8 date +'%D %T')【无线】-恢复备份的wireless" >> /mnt/sda1/112.txt
+	}
+
 }
 fi
 

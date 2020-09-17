@@ -2,25 +2,33 @@
 
 [ -x "/etc/init.d/wifidogx" ] || {
 	echo "$(TZ=CST-8 date +'%D %T')【apfree】-错误：未安装apfree-wifidog" >> /mnt/sda1/112.txt
-exit 0
-}
-if [ "$(opkg list-installed | grep "^apfree" | sed "/^apfree/s/.*- //g")" != "3.11.1716-4" ]; then
-	echo "$(TZ=CST-8 date +'%D %T')【apfree】-apfree版本不对" >> /mnt/sda1/112.txt
 	exit 0
+}
+
+if [ "$(opkg list-installed | grep "^apfree" | sed "/^apfree/s/.*- //g")" != "3.11.1716-4" ]; then {
+	echo "$(TZ=CST-8 date +'%D %T')【apfree】-跳过apfree版本" >> /mnt/sda1/112.txt
+}
+else
+{
+	#第二行后面插入pwd
+	#apfree-wifidog_4.08.1771-4 修复bug
+	#sed -i '2apwd' /etc/init.d/wifidogx
+	echo "$(TZ=CST-8 date +'%D %T')【apfree】-更正此版本apfree的/etc/init.d/wifidogx" >> /mnt/sda1/112.txt
+	sed -i '/" "disabled"/s/0/1/g' /etc/init.d/wifidogx
+	sed -i '/= "0" ]; then/s/0/1/g' /etc/init.d/wifidogx
+	sed -i '/if.*APFREE_/s/-s/! &/g' /etc/init.d/wifidogx
+	sed -i '/if.*APFREE_/s/\&/|/g' /etc/init.d/wifidogx
+}
 fi
 
+
+#重建apfee目录
+[ -d "/mnt/sda1/portal/wifidog" ] && {
+	ln -nsf /mnt/sda1/portal/wifidog /www/wifidog
+	echo "$(TZ=CST-8 date +'%D %T')【apfree】-重建apfee目录" >> /mnt/sda1/112.txt
+}
+
 [ ! -f /etc/config/wifidogx ] && touch /etc/config/wifidogx
-
-#第二行后面插入pwd
-#apfree-wifidog_4.08.1771-4 修复bug
-#sed -i '2apwd' /etc/init.d/wifidogx
-[ ! -f /mnt/sda1/112.txt ] && touch /mnt/sda1/112.txt
-echo "$(TZ=CST-8 date +'%D %T')【apfree】-更正/etc/init.d/wifidogx" >> /mnt/sda1/112.txt
-sed -i '/" "disabled"/s/0/1/g' /etc/init.d/wifidogx
-sed -i '/= "0" ]; then/s/0/1/g' /etc/init.d/wifidogx
-sed -i '/if.*APFREE_/s/-s/! &/g' /etc/init.d/wifidogx
-sed -i '/if.*APFREE_/s/\&/|/g' /etc/init.d/wifidogx
-
 uci -q batch <<-EOF >/dev/null
 	 set wifidogx.@wifidog[0]=wifidog
 	 set wifidogx.@wifidog[0].gateway_interface='br-lan'
