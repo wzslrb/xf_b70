@@ -1,6 +1,6 @@
 #!/bin/sh
 [ -x "/etc/init.d/frp" ] || {
-	logger -t "【FRP】" "错误未安装FRP"
+	echo "$(TZ=CST-8 date +'%D %T')【FRP】-错误未安装FRP" >> /mnt/sda1/112.txt
 	exit 0
 }
 [ -f "/etc/config/frp" ] || touch /etc/config/frp
@@ -35,5 +35,5 @@ uci -q batch <<-EOF >/dev/null
 	set frp.@proxy[0].enable='1'
 	commit frp
 EOF
-logger -t "【FRP】" "重设frp"
+echo "$(TZ=CST-8 date +'%D %T')【FRP】-重设frp" >> /mnt/sda1/112.txt
 exit 0

@@ -4,7 +4,7 @@
 uci set vsftpd.listen.pasv_min_port='50000'
 uci set vsftpd.listen.pasv_max_port='51000'
 uci commit vsftpd
-logger -t "【FSA】" "重设vsftpd"
+echo "$(TZ=CST-8 date +'%D %T')【FSA】-重设vsftpd" >> /mnt/sda1/112.txt
 }
 
 [ -f "/etc/config/sqm" ] && {
@@ -17,7 +17,7 @@ uci set sqm.@queue[0].qdisc='cake'
 uci set sqm.@queue[0].script='piece_of_cake.qos'
 uci set sqm.@queue[0].enabled='1'
 uci commit sqm
-logger -t "【FSA】" "重设sqm"
+echo "$(TZ=CST-8 date +'%D %T')【FSA】-重设sqm" >> /mnt/sda1/112.txt
 }
 [ -f "/etc/config/AdGuardHome" ] && {
 echo "重设AdGuardHome" >> /mnt/sda1/112.txt
@@ -28,12 +28,12 @@ uci set AdGuardHome.@AdGuardHome[0].waitonboot='1'
 uci set AdGuardHome.@AdGuardHome[0].redirect='redirect'
 uci set AdGuardHome.@AdGuardHome[0].configpath='/etc/config/AdG112.yaml'
 uci commit AdGuardHome
-logger -t "【FSA】" "重设AdGuardHome"
+echo "$(TZ=CST-8 date +'%D %T')【FSA】-重设AdGuardHome" >> /mnt/sda1/112.txt
 }
 
 [ -s "/usr/share/AdGuardHome/links.txt" ] && {
 sed -i '/\.tar\.gz/s/\.tar/_softfloat\.tar/' /usr/share/AdGuardHome/links.txt
-logger -t "【FSA】" "更新AdGuard Home升级路径"
+echo "$(TZ=CST-8 date +'%D %T')【FSA】-更新AdGuard Home升级路径" >> /mnt/sda1/112.txt
 }
 
 exit 0
