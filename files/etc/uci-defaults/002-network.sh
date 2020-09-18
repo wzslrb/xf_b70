@@ -29,8 +29,12 @@ uci -q batch <<-EOF >/dev/null
 	commit network
 EOF
 #service network restart
-
+#cachesize='0' 不缓冲
 uci -q batch <<-EOF >/dev/null
+	set dhcp.@dnsmasq[0].cachesize='0'
+	delete dhcp.@dnsmasq[0].boguspriv
+	delete dhcp.@dnsmasq[0].filterwin2k
+	delete dhcp.@dnsmasq[0].nonegcache
 	set dhcp.lan=dhcp
 	set dhcp.lan.interface='lan'
 	set dhcp.lan.start='100'
@@ -38,7 +42,7 @@ uci -q batch <<-EOF >/dev/null
 	set dhcp.lan.leasetime='12h'
 	delete dhcp.lan.dhcpv6
 	delete dhcp.lan.ra
-	delete dhcp.ra_slaac
+	delete dhcp.lan.ra_slaac
         del_list dhcp.lan.ra_flags='managed-config'
         del_list dhcp.lan.ra_flags='other-config'
 	set dhcp.wan=dhcp
