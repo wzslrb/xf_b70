@@ -1,5 +1,11 @@
 #!/bin/sh
 
+[ ! -f /etc/config/wireless ] && {
+	echo "$(TZ=CST-8 date +'%D %T')【无线】-wifi config初始化无线配置文件" >> /mnt/sda1/112.txt
+	wifi config
+	sleep 1
+}
+
 if [ -f "/etc/config/wireless" ]; then {
 uci -q batch <<-EOF >/dev/null
 	set wireless.radio0.country=CN
@@ -40,26 +46,15 @@ uci -q batch <<-EOF >/dev/null
 	set wireless.wf3.network='lan'
 	commit wireless
 EOF
-echo "$(TZ=CST-8 date +'%D %T')【无线】-重设无线配置文件" >> /mnt/sda1/112.txt
+echo "$(TZ=CST-8 date +'%D %T')【无线】-diy无线配置文件" >> /mnt/sda1/112.txt
 }
 else
 {
 	echo "$(TZ=CST-8 date +'%D %T')【无线】-★★★★★没有配置文件" >> /mnt/sda1/112.txt
-#	[ -f /mnt/sda1/lost\+found/wireless ] && {
-#		cp -pf /mnt/sda1/lost\+found/wireless /etc/config/
-#		echo "$(TZ=CST-8 date +'%D %T')【无线】-恢复备份的wireless" >> /mnt/sda1/112.txt
-#	}
-	if [[ -f /etc/rc.local && -z $(grep "wifi\.sh" /etc/rc.local) ]];then {
-		sed -i '/^exit 0/i /mnt/sda1/temp/wifi.sh' /etc/rc.local
-		echo "$(TZ=CST-8 date +'%D %T')【无线】-插入开机脚本rc.local" >> /mnt/sda1/112.txt
+	[ -f /mnt/sda1/lost\+found/wireless ] && {
+		cp -pf /mnt/sda1/lost\+found/wireless /etc/config/
+		echo "$(TZ=CST-8 date +'%D %T')【无线】-恢复备份的wireless" >> /mnt/sda1/112.txt
 	}
-	else {
-		sed -i '/^\/mnt/s/.*//' /etc/rc.local
-		echo "$(TZ=CST-8 date +'%D %T')【无线】-删除开机脚本rc.local" >> /mnt/sda1/112.txt
-	}
-	fi
-
-
 }
 fi
 
@@ -69,10 +64,9 @@ fi
 	echo "$(TZ=CST-8 date +'%D %T')【共享（Samba）】-错误，未安装samba" >> /mnt/sda1/112.txt
 	exit 0
 }
-[ -f "/etc/config/samba" ] || {
-	echo "$(TZ=CST-8 date +'%D %T')【共享（Samba）】-新建/etc/config/samba" >> /mnt/sda1/112.txt
-	touch /etc/config/samba
-}
+
+echo "$(TZ=CST-8 date +'%D %T')【共享（Samba）】-20-smb初始化共享设置" >> /mnt/sda1/112.txt
+/etc/hotplug.d/block/20-smb 2>&1
 
 sed -i '/^[^#].*invalid users/s/^/#&/g' /etc/samba/smb.conf.template
 sed -i '/bind interfaces only/s/only.*/only = off/g' /etc/samba/smb.conf.template
@@ -80,6 +74,7 @@ echo "root:0:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:7E095E67AE53F77921B9C97FFAADB43F:[
 echo "$(TZ=CST-8 date +'%D %T')【共享（Samba）】-修改smb.conf.template及添加密码" >> /mnt/sda1/112.txt
 
 uci -q batch <<-EOF >/dev/null
+	delete samba.@samba[1]
 	delete samba.@samba[0]
 	set samba.def=samba
 	set samba.def.name='b'
@@ -88,6 +83,7 @@ uci -q batch <<-EOF >/dev/null
 	set samba.def.homes='0'
 	set samba.def.autoshare='0'
 	set samba.def.enabled='1'
+	delete samba.@sambashare[4]
 	delete samba.@sambashare[3]
 	delete samba.@sambashare[2]
 	delete samba.@sambashare[1]
@@ -121,5 +117,5 @@ uci -q batch <<-EOF >/dev/null
 	commit samba
 EOF
 echo "$(TZ=CST-8 date +'%D %T')【共享（Samba）】-添加diy共享配置" >> /mnt/sda1/112.txt
-
+/etc/init.d/samba reload
 exit 0
