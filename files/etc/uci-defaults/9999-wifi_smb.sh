@@ -65,14 +65,14 @@ fi
 	exit 0
 }
 
-echo "$(TZ=CST-8 date +'%D %T')【共享（Samba）】-20-smb初始化共享设置" >> /mnt/sda1/112.txt
-/etc/hotplug.d/block/20-smb 2>&1
+
 
 sed -i '/^[^#].*invalid users/s/^/#&/g' /etc/samba/smb.conf.template
 sed -i '/bind interfaces only/s/only.*/only = off/g' /etc/samba/smb.conf.template
 echo "root:0:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:7E095E67AE53F77921B9C97FFAADB43F:[U          ]:LCT-00000001:" > /etc/samba/smbpasswd
 echo "$(TZ=CST-8 date +'%D %T')【共享（Samba）】-修改smb.conf.template及添加密码" >> /mnt/sda1/112.txt
 
+if [ -f /etc/config/samba ]; then {
 uci -q batch <<-EOF >/dev/null
 	delete samba.@samba[1]
 	delete samba.@samba[0]
@@ -111,11 +111,14 @@ uci -q batch <<-EOF >/dev/null
 	set samba.sh3.guest_ok='yes'
 	set samba.sh3.create_mask='0666'
 	set samba.sh3.dir_mask='0777'
-	set samba.@sambashare[3]=sambashare
-	set samba.@sambashare[3].auto='0'
-	set samba.@sambashare[3].browseable='no'
 	commit samba
 EOF
-echo "$(TZ=CST-8 date +'%D %T')【共享（Samba）】-添加diy共享配置" >> /mnt/sda1/112.txt
-/etc/init.d/samba reload
+	echo "$(TZ=CST-8 date +'%D %T')【共享（Samba）】-添加diy共享配置" >> /mnt/sda1/112.txt
+}
+else
+{
+	echo "$(TZ=CST-8 date +'%D %T')【共享（Samba）】-没有发现配置文件" >> /mnt/sda1/112.txt
+}
+fi
+
 exit 0

@@ -54,7 +54,7 @@ uci -q batch <<-EOF >/dev/null
 	set dhcp.lcrm2.interface='lcrm2'
 	commit dhcp
 EOF
-uci del_list dhcp.lan.ra_flags
+
 #service dnsmasq restart
 echo "$(TZ=CST-8 date +'%D %T')【网络】-初始化network dhcp" >> /mnt/sda1/112.txt
 

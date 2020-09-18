@@ -34,6 +34,8 @@ uci -q batch <<-EOF >/dev/null
 	set AdGuardHome.@AdGuardHome[0].waitonboot='1'
 	set AdGuardHome.@AdGuardHome[0].redirect='redirect'
 	set AdGuardHome.@AdGuardHome[0].configpath='/usr/bin/AdGuardHome/AdG112.yaml'
+	set AdGuardHome.AdGuardHome.logfile='/usr/bin/AdGuardHome/AdGuardHome.log'
+	set AdGuardHome.AdGuardHome.verbose='1'
 	commit AdGuardHome
 EOF
 echo "$(TZ=CST-8 date +'%D %T')【FSA】-重设AdGuardHome" >> /mnt/sda1/112.txt

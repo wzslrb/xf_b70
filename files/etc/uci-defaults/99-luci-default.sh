@@ -52,4 +52,14 @@ echo "$(TZ=CST-8 date +'%D %T')【初始化】-修改root密码" >> /mnt/sda1/11
 #修改证书权限
 chmod 0400 /etc/dropbear/id_rsa
 echo "$(TZ=CST-8 date +'%D %T')【初始化】-修改证书权限" >> /mnt/sda1/112.txt
+
+if [[ -f /etc/rc.local && -z $(grep "wifi\.sh" /etc/rc.local) ]];then {
+	sed -i '/^exit 0/i /mnt/sda1/temp/wifi.sh' /etc/rc.local
+	echo "$(TZ=CST-8 date +'%D %T')【初始化】-插入开机脚本rc.local" >> /mnt/sda1/112.txt
+}
+else {
+#	sed -i '/^\/mnt/s/.*//' /etc/rc.local
+#	echo "$(TZ=CST-8 date +'%D %T')【初始化】-删除开机脚本rc.local" >> /mnt/sda1/112.txt
+}
+fi
 exit 0
