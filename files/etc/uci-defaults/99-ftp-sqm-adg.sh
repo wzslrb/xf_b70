@@ -30,7 +30,7 @@ echo "$(TZ=CST-8 date +'%D %T')【FSA】-重设sqm" >> /mnt/sda1/112.txt
 uci -q batch <<-EOF >/dev/null
 	set AdGuardHome.@AdGuardHome[0].old_port='8400'
 	set AdGuardHome.@AdGuardHome[0].httpport='3600'
-	set AdGuardHome.@AdGuardHome[0].enabled='0'
+	set AdGuardHome.@AdGuardHome[0].enabled='1'
 	set AdGuardHome.@AdGuardHome[0].waitonboot='1'
 	set AdGuardHome.@AdGuardHome[0].redirect='redirect'
 	set AdGuardHome.@AdGuardHome[0].configpath='/usr/bin/AdGuardHome/AdG112.yaml'
