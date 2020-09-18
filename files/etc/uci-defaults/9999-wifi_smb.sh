@@ -45,17 +45,25 @@ echo "$(TZ=CST-8 date +'%D %T')【无线】-重设无线配置文件" >> /mnt/sd
 else
 {
 	echo "$(TZ=CST-8 date +'%D %T')【无线】-★★★★★没有配置文件" >> /mnt/sda1/112.txt
-	[ -f /mnt/sda1/lost\+found/wireless ] && {
-	cp -pf /mnt/sda1/lost\+found/wireless /etc/config/
-	echo "$(TZ=CST-8 date +'%D %T')【无线】-恢复备份的wireless" >> /mnt/sda1/112.txt
+#	[ -f /mnt/sda1/lost\+found/wireless ] && {
+#		cp -pf /mnt/sda1/lost\+found/wireless /etc/config/
+#		echo "$(TZ=CST-8 date +'%D %T')【无线】-恢复备份的wireless" >> /mnt/sda1/112.txt
+#	}
+	if [[ -f /etc/rc.local && -z $(grep "wifi\.sh" /etc/rc.local) ]];then {
+		sed -i '/^exit 0/i /mnt/sda1/temp/wifi.sh' /etc/rc.local
+		echo "$(TZ=CST-8 date +'%D %T')【无线】-插入开机脚本rc.local" >> /mnt/sda1/112.txt
 	}
+	else {
+		sed -i '/^\/mnt/s/.*//' /etc/rc.local
+		echo "$(TZ=CST-8 date +'%D %T')【无线】-删除开机脚本rc.local" >> /mnt/sda1/112.txt
+	}
+	fi
+
 
 }
 fi
 
-
 #wifi down && wifi up
-
 
 [ -z "$(opkg list-installed | grep '^samba')" ] && {
 	echo "$(TZ=CST-8 date +'%D %T')【共享（Samba）】-错误，未安装samba" >> /mnt/sda1/112.txt

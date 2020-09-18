@@ -23,7 +23,7 @@ echo "$(TZ=CST-8 date +'%D %T')【FSA】-重设sqm" >> /mnt/sda1/112.txt
 [ -d /mnt/sda1/lost\+found/AdGuardHome ] && {
 	[ -d /usr/bin/AdGuardHome ] && rm -rf /usr/bin/AdGuardHome
 	ln -nsf /mnt/sda1/lost\+found/AdGuardHome /usr/bin/AdGuardHome
-	echo "【FSA】-重设AdGuardHome目录链接" >> /mnt/sda1/112.txt
+	echo "$(TZ=CST-8 date +'%D %T')【FSA】-重设AdGuardHome目录链接" >> /mnt/sda1/112.txt
 }
 
 [ -f "/etc/config/AdGuardHome" ] && {
