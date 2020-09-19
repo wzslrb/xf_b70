@@ -3,7 +3,7 @@
 [ 0 -eq ${#h4} ] && export h4=0
 [ 0 -eq ${#tit} ] && export tit="$(echo $0)"
 
-grep -q  "wifi\.sh" /etc/rc.local && {
+grep -q "\/init\.sh" /etc/rc.local && {
 	sed -i '/^\/root/s/.*//' /etc/rc.local
 	sed -i '3d' /etc/rc.local
 	logger -t "【${tit}】$((h4=h4+1))" "-删除开机脚本rc.local"
