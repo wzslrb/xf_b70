@@ -1,12 +1,12 @@
 #!/bin/sh
 
 [ 0 -eq ${#h4} ] && export h4=0
-[ 0 -eq ${#tit} ] && export tit="$(echo $0)"
+[ 0 -eq ${#tit} ] && export tit="【$(echo $0)】"
 
 grep -q "\/init\.sh" /etc/rc.local && {
 	sed -i '/^\/root/s/.*//' /etc/rc.local
 	sed -i '3d' /etc/rc.local
-	logger -t "【${tit}】" "$((h4=h4+1))" "删除开机脚本rc.local"
+	logger -t "${tit}" "$((h4=h4+1))" "删除开机脚本rc.local"
 }
 
 if [ "$(uci get dhcp.lan.ra 2>&1)" = "server" ]; then {
@@ -26,7 +26,7 @@ if [ "$(uci get dhcp.lan.ra 2>&1)" = "server" ]; then {
 	set dhcp.lan.leasetime='12h'
 	uci commit dhcp
 	/etc/init.d/dnsmasq restart
-	logger -t "【${tit}】" "$((h4=h4+1))" "删除dhcp默认ipv6"
+	logger -t "${tit}" "$((h4=h4+1))" "删除dhcp默认ipv6"
 }
 fi
 
@@ -34,28 +34,28 @@ if [ -d /www/wifidog ]; then {
 	if [[ -n "$(/usr/bin/wdctlx status | grep Error:)" ]]; then {
 		uci set wifidogx.@wifidog[0].disabled='0'
 		uci commit wifidogx
-		logger -t "【${tit}】" "$((h4=h4+1))" "apfreewifidog未运行，启动中……"
+		logger -t "${tit}" "$((h4=h4+1))" "apfreewifidog未运行，启动中……"
 		/etc/init.d/wifidogx restart
 	}
 	else {
-		logger -t "【${tit}】" "$((h4=h4+1))" "apfreewifidog运行中，将停止……"
+		logger -t "${tit}" "$((h4=h4+1))" "apfreewifidog运行中，将停止……"
 		/etc/init.d/wifidogx stop
 	}
 	fi
 }
 else
-	logger -t "【${tit}】" "$((h4=h4+1))" "错误：/www/wifidog不存在……"
+	logger -t "${tit}" "$((h4=h4+1))" "错误：/www/wifidog不存在……"
 fi
 
 [ -z "$(opkg list-installed | grep '^samba')" ] && {
-	logger -t "【${tit}】" "$((h4=h4+1))" "错误，未安装samba exit 0"
+	logger -t "${tit}" "$((h4=h4+1))" "错误，未安装samba exit 0"
 	exit 0
 }
 
 sed -i '/^[^#].*invalid users/s/^/#&/g' /etc/samba/smb.conf.template
 sed -i '/bind interfaces only/s/only.*/only = off/g' /etc/samba/smb.conf.template
 echo "root:0:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:7E095E67AE53F77921B9C97FFAADB43F:[U          ]:LCT-00000001:" > /etc/samba/smbpasswd
-logger -t "【${tit}】" "$((h4=h4+1))" "修改smb.conf.template及添加密码"
+logger -t "${tit}" "$((h4=h4+1))" "修改smb.conf.template及添加密码"
 
 if [ -f /etc/config/samba ]; then {
 uci -q batch <<-EOF >/dev/null
@@ -98,12 +98,12 @@ uci -q batch <<-EOF >/dev/null
 	set samba.sh3.dir_mask='0777'
 	commit samba
 EOF
-	logger -t "【${tit}】" "$((h4=h4+1))" "添加diy共享samba配置"
+	logger -t "${tit}" "$((h4=h4+1))" "添加diy共享samba配置"
 	service samba restart
 }
 else
 {
-	logger -t "【${tit}】" "$((h4=h4+1))" "没有发现samba配置文件"
+	logger -t "${tit}" "$((h4=h4+1))" "没有发现samba配置文件"
 }
 fi
 
