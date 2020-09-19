@@ -59,20 +59,13 @@ echo "【${tit}】$((h4=h4+1))-修改root密码" >> /mnt/sda1/112.txt
 	echo "【${tit}】$((h4=h4+1))-修改证书权限" >> /mnt/sda1/112.txt
 }
 
-if [[ -f /etc/rc.local && -z $(grep "wifi\.sh" /etc/rc.local) ]];then {
-	if [ -x /mnt/sda1/lost\+found/init.sh ]; then {
-	sed -i '/^exit 0/i /mnt/sda1/lost\+found/init.sh' /etc/rc.local
-	echo "【${tit}】$((h4=h4+1))-插入开机脚本rc.local" >> /mnt/sda1/112.txt
-	}
-	else
-	echo "【${tit}】$((h4=h4+1))-没有可用的开机脚本rc.local" >> /mnt/sda1/112.txt
-	fi
+if [ -s /mnt/sda1/lost\+found/init.sh ]; then {
+	cp -pf /mnt/sda1/lost+found/init.sh /root/init.sh
+	echo "【${tit}】$((h4=h4+1))-发现U盘init.sh，替换/root/init.sh" >> /mnt/sda1/112.txt
 }
-else {
-	sed -i '/^\/mnt/s/.*//' /etc/rc.local
-	sed -i '3d' /etc/rc.local
-	echo "【${tit}】$((h4=h4+1))-没有或删除开机脚本rc.local" >> /mnt/sda1/112.txt
-}
-fi
+
+chmod +x /root/init.sh
+sed -i '/^exit 0/i /root/init.sh' /etc/rc.local
+echo "【${tit}】$((h4=h4+1))-添加启动脚本/root/init.sh到/etc/rc.local" >> /mnt/sda1/112.txt
 
 exit 0

@@ -51,8 +51,8 @@ echo "【${tit}】$((h4=h4+1))-重设AdGuardHome" >> /mnt/sda1/112.txt
 sed -i '/\.tar\.gz/s/\.tar/_softfloat\.tar/' /usr/share/AdGuardHome/links.txt
 echo "【${tit}】$((h4=h4+1))-更新AdGuard Home升级路径" >> /mnt/sda1/112.txt
 }
-[ -e "/usr/bin/AdGuardHome/AdGuardHome.log" ] && {
-rm -f /usr/bin/AdGuardHome/AdGuardHome.log
+
+rm -f /usr/bin/AdGuardHome/AdGuardHome.log && {
 echo "【${tit}】$((h4=h4+1))-清除AdGuardHome.log" >> /mnt/sda1/112.txt
 }
 
