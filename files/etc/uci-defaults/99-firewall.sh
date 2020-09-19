@@ -1,9 +1,11 @@
 #!/bin/sh
 
+[ 0 -eq ${#h4} ] && export h4=0
+
 [ -s "/etc/firewall.user" ] && {
 sed -i '/^[^#]/s/.*/# &/' /etc/firewall.user
 #service firewall reload | tee -ai /mnt/sda1/112.txt
-echo "$(TZ=CST-8 date +'%D %T')【防火墙】-注释防火墙转发规则iptables 53" >> /mnt/sda1/112.txt
+echo "【$(echo $0 | sed 's/.*\///')】$((h4=h4+1))-注释防火墙转发规则iptables 53" >> /mnt/sda1/112.txt
 } 
 
 uci -q batch <<-EOF >/dev/null
@@ -59,6 +61,6 @@ uci -q batch <<-EOF >/dev/null
 	commit firewall
 EOF
 #service firewall reload
-echo "$(TZ=CST-8 date +'%D %T')【防火墙】-添加防火墙rule" >> /mnt/sda1/112.txt
+echo "【$(echo $0 | sed 's/.*\///')】$((h4=h4+1))-添加防火墙rule" >> /mnt/sda1/112.txt
 
 exit 0

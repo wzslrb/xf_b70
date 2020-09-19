@@ -1,5 +1,7 @@
 #!/bin/sh
 
+[ 0 -eq ${#h4} ] && export h4=0
+
 uci -q batch <<-EOF >/dev/null
 	set network.lan=interface
 	set network.lan.type='bridge'
@@ -56,12 +58,12 @@ uci -q batch <<-EOF >/dev/null
 EOF
 
 #service dnsmasq restart
-echo "$(TZ=CST-8 date +'%D %T')【网络】-初始化network dhcp" >> /mnt/sda1/112.txt
+echo "【$(echo $0 | sed 's/.*\///')】$((h4=h4+1))-初始化network dhcp" >> /mnt/sda1/112.txt
 
 uci add_list firewall.@zone[0].network='lcrm2'
 uci add_list firewall.@zone[1].network='wan2'
 uci commit firewall
 #service firewall reload
-echo "$(TZ=CST-8 date +'%D %T')【网络】-初始化防火墙wan2 lcrm2" >> /mnt/sda1/112.txt
+echo "【$(echo $0 | sed 's/.*\///')】$((h4=h4+1))-初始化防火墙wan2 lcrm2" >> /mnt/sda1/112.txt
 
 exit 0

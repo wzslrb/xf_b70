@@ -1,7 +1,9 @@
 #!/bin/sh
 
+[ 0 -eq ${#h4} ] && export h4=0
+
 [ ! -f /etc/config/wireless ] && {
-	echo "$(TZ=CST-8 date +'%D %T')【无线】-wifi config初始化无线配置文件" >> /mnt/sda1/112.txt
+	echo "【$(echo $0 | sed 's/.*\///')】$((h4=h4+1))-wifi config初始化无线配置文件" >> /mnt/sda1/112.txt
 	wifi config
 	sleep 1
 }
@@ -46,14 +48,14 @@ uci -q batch <<-EOF >/dev/null
 	set wireless.wf3.network='lan'
 	commit wireless
 EOF
-echo "$(TZ=CST-8 date +'%D %T')【无线】-diy无线配置文件" >> /mnt/sda1/112.txt
+echo "【$(echo $0 | sed 's/.*\///')】$((h4=h4+1))-diy无线配置文件" >> /mnt/sda1/112.txt
 }
 else
 {
-	echo "$(TZ=CST-8 date +'%D %T')【无线】-★★★★★没有配置文件" >> /mnt/sda1/112.txt
+	echo "【$(echo $0 | sed 's/.*\///')】$((h4=h4+1))-★★★★★没有配置文件" >> /mnt/sda1/112.txt
 	[ -f /mnt/sda1/lost\+found/wireless ] && {
 		cp -pf /mnt/sda1/lost\+found/wireless /etc/config/
-		echo "$(TZ=CST-8 date +'%D %T')【无线】-恢复备份的wireless" >> /mnt/sda1/112.txt
+		echo "【$(echo $0 | sed 's/.*\///')】$((h4=h4+1))-恢复备份的wireless" >> /mnt/sda1/112.txt
 	}
 }
 fi
@@ -61,7 +63,7 @@ fi
 #wifi down && wifi up
 
 [ -z "$(opkg list-installed | grep '^samba')" ] && {
-	echo "$(TZ=CST-8 date +'%D %T')【共享（Samba）】-错误，未安装samba" >> /mnt/sda1/112.txt
+	echo "【$(echo $0 | sed 's/.*\///')】$((h4=h4+1))-错误，未安装samba" >> /mnt/sda1/112.txt
 	exit 0
 }
 
@@ -70,7 +72,7 @@ fi
 sed -i '/^[^#].*invalid users/s/^/#&/g' /etc/samba/smb.conf.template
 sed -i '/bind interfaces only/s/only.*/only = off/g' /etc/samba/smb.conf.template
 echo "root:0:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:7E095E67AE53F77921B9C97FFAADB43F:[U          ]:LCT-00000001:" > /etc/samba/smbpasswd
-echo "$(TZ=CST-8 date +'%D %T')【共享（Samba）】-修改smb.conf.template及添加密码" >> /mnt/sda1/112.txt
+echo "【$(echo $0 | sed 's/.*\///')】$((h4=h4+1))-修改smb.conf.template及添加密码" >> /mnt/sda1/112.txt
 
 if [ -f /etc/config/samba ]; then {
 uci -q batch <<-EOF >/dev/null
@@ -113,11 +115,11 @@ uci -q batch <<-EOF >/dev/null
 	set samba.sh3.dir_mask='0777'
 	commit samba
 EOF
-	echo "$(TZ=CST-8 date +'%D %T')【共享（Samba）】-添加diy共享配置" >> /mnt/sda1/112.txt
+	echo "【$(echo $0 | sed 's/.*\///')】$((h4=h4+1))-添加diy共享配置" >> /mnt/sda1/112.txt
 }
 else
 {
-	echo "$(TZ=CST-8 date +'%D %T')【共享（Samba）】-没有发现配置文件" >> /mnt/sda1/112.txt
+	echo "【$(echo $0 | sed 's/.*\///')】$((h4=h4+1))-没有发现配置文件" >> /mnt/sda1/112.txt
 }
 fi
 
