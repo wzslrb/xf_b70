@@ -1,6 +1,13 @@
 #!/bin/sh
 
 [ 0 -eq ${#h4} ] && export h4=0
+export tit="网络"
+echo "★★★测试命令:$(echo $0)" >> /mnt/sda1/112.txt
+echo "★★★测试命令:$(echo $0 | sed 's/.*\///')" >> /mnt/sda1/112.txt
+echo "★★★测试命令:$(echo $1)" >> /mnt/sda1/112.txt
+echo "★★★测试命令:$(echo $1 | sed 's/.*\///')" >> /mnt/sda1/112.txt
+echo "★★★测试命令:$(echo $2)" >> /mnt/sda1/112.txt
+echo "★★★测试命令:$(echo $2 | sed 's/.*\///')" >> /mnt/sda1/112.txt
 
 uci -q batch <<-EOF >/dev/null
 	set network.lan=interface
@@ -31,9 +38,8 @@ uci -q batch <<-EOF >/dev/null
 	commit network
 EOF
 #service network restart
-#cachesize='0' 不缓冲
+
 uci -q batch <<-EOF >/dev/null
-	set dhcp.@dnsmasq[0].cachesize='0'
 	delete dhcp.@dnsmasq[0].boguspriv
 	delete dhcp.@dnsmasq[0].filterwin2k
 	delete dhcp.@dnsmasq[0].nonegcache
@@ -58,12 +64,12 @@ uci -q batch <<-EOF >/dev/null
 EOF
 
 #service dnsmasq restart
-echo "【$(echo $0 | sed 's/.*\///')】$((h4=h4+1))-初始化network dhcp" >> /mnt/sda1/112.txt
+echo "【${tit}】$((h4=h4+1))-初始化network dhcp" >> /mnt/sda1/112.txt
 
 uci add_list firewall.@zone[0].network='lcrm2'
 uci add_list firewall.@zone[1].network='wan2'
 uci commit firewall
 #service firewall reload
-echo "【$(echo $0 | sed 's/.*\///')】$((h4=h4+1))-初始化防火墙wan2 lcrm2" >> /mnt/sda1/112.txt
+echo "【${tit}】$((h4=h4+1))-初始化防火墙wan2 lcrm2" >> /mnt/sda1/112.txt
 
 exit 0
