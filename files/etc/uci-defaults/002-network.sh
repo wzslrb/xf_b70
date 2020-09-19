@@ -1,13 +1,10 @@
 #!/bin/sh
 
 [ 0 -eq ${#h4} ] && export h4=0
+export tag="$(echo $0 | sed 's/.*\///')"
 export tit="网络"
-echo "★★★测试命令:$(echo $0)" >> /mnt/sda1/112.txt
-echo "★★★测试命令:$(echo $0 | sed 's/.*\///')" >> /mnt/sda1/112.txt
-echo "★★★测试命令:$(echo $1)" >> /mnt/sda1/112.txt
-echo "★★★测试命令:$(echo $1 | sed 's/.*\///')" >> /mnt/sda1/112.txt
-echo "★★★测试命令:$(echo $2)" >> /mnt/sda1/112.txt
-echo "★★★测试命令:$(echo $2 | sed 's/.*\///')" >> /mnt/sda1/112.txt
+echo "★★★测试命令:$(echo $0)"
+echo "★★★测试命令:$(echo $0 | sed 's/.*\///')"
 
 uci -q batch <<-EOF >/dev/null
 	set network.lan=interface
@@ -43,11 +40,12 @@ uci -q batch <<-EOF >/dev/null
 	delete dhcp.@dnsmasq[0].boguspriv
 	delete dhcp.@dnsmasq[0].filterwin2k
 	delete dhcp.@dnsmasq[0].nonegcache
-	set dhcp.lan=dhcp
-	set dhcp.lan.interface='lan'
-	set dhcp.lan.start='100'
-	set dhcp.lan.limit='150'
-	set dhcp.lan.leasetime='12h'
+	set dhcp.lan='dhcp'
+	set dhcp.lan.ignore='1'
+	delete dhcp.lan.interface='lan'
+	delete dhcp.lan.start='100'
+	delete dhcp.lan.limit='150'
+	delete dhcp.lan.leasetime='12h'
 	delete dhcp.lan.dhcpv6
 	delete dhcp.lan.ra
 	delete dhcp.lan.ra_slaac
@@ -64,12 +62,12 @@ uci -q batch <<-EOF >/dev/null
 EOF
 
 #service dnsmasq restart
-echo "【${tit}】$((h4=h4+1))-初始化network dhcp" >> /mnt/sda1/112.txt
+logger -t "${tag}" "【${tit}】$((h4=h4+1))：" "初始化network dhcp"
 
 uci add_list firewall.@zone[0].network='lcrm2'
 uci add_list firewall.@zone[1].network='wan2'
 uci commit firewall
 #service firewall reload
-echo "【${tit}】$((h4=h4+1))-初始化防火墙wan2 lcrm2" >> /mnt/sda1/112.txt
+logger -t "${tag}" "【${tit}】$((h4=h4+1))：" "初始化防火墙wan2 lcrm2"
 
 exit 0

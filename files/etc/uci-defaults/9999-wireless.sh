@@ -1,10 +1,11 @@
 #!/bin/sh
 
 [ 0 -eq ${#h4} ] && export h4=0
+export tag="$(echo $0 | sed 's/.*\///')"
 export tit="无线共享"
 
 [ ! -f /etc/config/wireless ] && {
-	echo "【${tit}】$((h4=h4+1))-wifi config初始化无线配置文件" >> /mnt/sda1/112.txt
+	logger -t "${tag}" "【${tit}】$((h4=h4+1))：" "wifi config初始化无线配置文件"
 	wifi config
 	sleep 1
 }
@@ -49,14 +50,14 @@ uci -q batch <<-EOF >/dev/null
 	set wireless.wf3.network='lan'
 	commit wireless
 EOF
-echo "【${tit}】$((h4=h4+1))-diy无线配置文件" >> /mnt/sda1/112.txt
+logger -t "${tag}" "【${tit}】$((h4=h4+1))：" "diy无线配置文件"
 }
 else
 {
-	echo "【${tit}】$((h4=h4+1))-★★★★★没有配置文件" >> /mnt/sda1/112.txt
+	logger -t "${tag}" "【${tit}】$((h4=h4+1))：" "★★★★★没有配置文件"
 	[ -f /mnt/sda1/lost\+found/wireless ] && {
 		cp -pf /mnt/sda1/lost\+found/wireless /etc/config/
-		echo "【${tit}】$((h4=h4+1))-恢复备份的wireless" >> /mnt/sda1/112.txt
+		logger -t "${tag}" "【${tit}】$((h4=h4+1))：" "恢复备份的wireless"
 	}
 }
 fi

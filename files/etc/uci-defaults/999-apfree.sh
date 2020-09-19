@@ -1,22 +1,23 @@
 #!/bin/sh
 
 [ 0 -eq ${#h4} ] && export h4=0
-export tit="apfree-wifidog"
+export tag="$(echo $0 | sed 's/.*\///')"
+export tit="apfree_Wifidog"
 
 [ -x "/etc/init.d/wifidogx" ] || {
-	echo "【${tit}】$((h4=h4+1))-错误：未安装apfree-wifidog" >> /mnt/sda1/112.txt
+	logger -t "${tag}" "【${tit}】$((h4=h4+1))：" "错误：未安装apfree-wifidog"
 	exit 0
 }
 
 if [ "$(opkg list-installed | grep "^apfree" | sed "/^apfree/s/.*- //g")" != "3.11.1716-4" ]; then {
-	echo "【${tit}】$((h4=h4+1))-跳过apfree版本" >> /mnt/sda1/112.txt
+	logger -t "${tag}" "【${tit}】$((h4=h4+1))：" "跳过apfree版本"
 }
 else
 {
 	#第二行后面插入pwd
 	#apfree-wifidog_4.08.1771-4 修复bug
 	#sed -i '2apwd' /etc/init.d/wifidogx
-	echo "【${tit}】$((h4=h4+1))-更正此版本apfree的/etc/init.d/wifidogx" >> /mnt/sda1/112.txt
+	logger -t "${tag}" "【${tit}】$((h4=h4+1))：" "更正此版本apfree的/etc/init.d/wifidogx"
 	sed -i '/" "disabled"/s/0/1/g' /etc/init.d/wifidogx
 	sed -i '/= "0" ]; then/s/0/1/g' /etc/init.d/wifidogx
 	sed -i '/if.*APFREE_/s/-s/! &/g' /etc/init.d/wifidogx
@@ -28,7 +29,7 @@ fi
 #重建apfee目录
 [ -d "/mnt/sda1/portal/wifidog" ] && {
 	ln -nsf /mnt/sda1/portal/wifidog /www/wifidog
-	echo "【${tit}】$((h4=h4+1))-重建apfee目录" >> /mnt/sda1/112.txt
+	logger -t "${tag}" "【${tit}】$((h4=h4+1))：" "重建apfee目录"
 }
 
 [ ! -f /etc/config/wifidogx ] && touch /etc/config/wifidogx
@@ -54,6 +55,6 @@ uci -q batch <<-EOF >/dev/null
 	 commit wifidogx
 EOF
 
-echo "【${tit}】$((h4=h4+1))-更新wifidogx配置文件,默认禁用disabled" >> /mnt/sda1/112.txt
+logger -t "${tag}" "【${tit}】$((h4=h4+1))：" "更新wifidogx配置文件,默认禁用disabled"
 
 exit 0
