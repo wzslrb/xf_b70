@@ -3,11 +3,7 @@
 [ 0 -eq ${#h4} ] && export h4=0
 export tag="$(echo $0 | sed 's/.*\///')"
 export tit="无线共享"
-if [ -d /mnt/sda1 ]; then
-	export log="/mnt/sda1/112.txt"
-else
-	export log="/tmp/112.txt"
-fi
+[ -d /mnt/sda1 ] && export log="/mnt/sda1/112.txt" || export log="/tmp/112.txt"
 [ ! -f /etc/config/wireless ] && {
 	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "wifi config初始化无线配置文件" >> $log
 	wifi config
@@ -53,7 +49,7 @@ uci -q batch <<-EOF >/dev/null
 	set wireless.wf3.network='lan'
 	commit wireless
 EOF
- "${tag}" "【${tit}】$((h4=h4+1))：" "diy无线配置文件"
+	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "diy无线配置文件"
 }
 else
 {

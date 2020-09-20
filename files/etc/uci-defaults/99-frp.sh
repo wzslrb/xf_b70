@@ -3,11 +3,7 @@
 [ 0 -eq ${#h4} ] && export h4=0
 export tag="$(echo $0 | sed 's/.*\///')"
 export tit="FRP"
-if [ -d /mnt/sda1 ]; then
-	export log="/mnt/sda1/112.txt"
-else
-	export log="/tmp/112.txt"
-fi
+[ -d /mnt/sda1 ] && export log="/mnt/sda1/112.txt" || export log="/tmp/112.txt"
 
 [ -x "/etc/init.d/frp" ] || {
 	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "错误未安装FRP" >> $log

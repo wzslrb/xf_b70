@@ -2,6 +2,9 @@
 
 [ 0 -eq ${#h4} ] && export h4=0
 [ 0 -eq ${#tag} ] && export tag="【$(echo $0)】"
+[ -d /mnt/sda1 ] && export log="/mnt/sda1/112.txt" || export log="/tmp/112.txt"
+
+logger -t "★★★" "【初始化日志】" "$log"
 
 grep -q "\/init\.sh" /etc/rc.local && {
 	sed -i '/^\/root/s/.*//' /etc/rc.local
@@ -32,10 +35,6 @@ if [ "$(uci get dhcp.lan.ra 2>&1)" = "server" ]; then {
 	uci del_list dhcp.lan.ra_flags='other-config'
 	uci set dhcp.lan.ignore='0'
 	uci delete dhcp.lan.ignore
-	set dhcp.lan.interface='lan'
-	set dhcp.lan.start='100'
-	set dhcp.lan.limit='150'
-	set dhcp.lan.leasetime='12h'
 	uci commit dhcp
 	/etc/init.d/dnsmasq restart
 	logger -t "${tag}" "$((h4=h4+1))" "删除dhcp默认ipv6"
@@ -110,7 +109,8 @@ uci -q batch <<-EOF >/dev/null
 	set samba.sh3.dir_mask='0777'
 	commit samba
 EOF
-	logger -t "${tag}" "$((h4=h4+1))" "添加diy共享samba配置"
+	logger -t "${tag}" "$((h4=h4+1))" "添加diy共享samba配置，稍后36重启samba"
+	sleep 36
 	service samba restart
 }
 else
@@ -119,5 +119,10 @@ else
 }
 fi
 
+[ -f "/etc/config/AdGuardHome" ] && {
+logger -t "${tag}" "$((h4=h4+1))" "稍后36秒重启AdGuardHome"
+sleep 36
+service AdGuardHome restart
+}
 exit 0
 

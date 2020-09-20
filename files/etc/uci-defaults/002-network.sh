@@ -3,11 +3,7 @@
 [ 0 -eq ${#h4} ] && export h4=0
 export tag="$(echo $0 | sed 's/.*\///')"
 export tit="网络"
-if [ -d /mnt/sda1 ]; then
-	export log="/mnt/sda1/112.txt"
-else
-	export log="/tmp/112.txt"
-fi
+[ -d /mnt/sda1 ] && export log="/mnt/sda1/112.txt" || export log="/tmp/112.txt"
 
 uci -q batch <<-EOF >/dev/null
 	set network.lan=interface
@@ -45,10 +41,6 @@ uci -q batch <<-EOF >/dev/null
 	delete dhcp.@dnsmasq[0].nonegcache
 	set dhcp.lan='dhcp'
 	set dhcp.lan.ignore='1'
-	delete dhcp.lan.interface='lan'
-	delete dhcp.lan.start='100'
-	delete dhcp.lan.limit='150'
-	delete dhcp.lan.leasetime='12h'
 	delete dhcp.lan.dhcpv6
 	delete dhcp.lan.ra
 	delete dhcp.lan.ra_slaac

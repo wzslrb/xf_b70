@@ -3,11 +3,7 @@
 [ 0 -eq ${#h4} ] && export h4=0
 export tag="$(echo $0 | sed 's/.*\///')"
 export tit="FtpSamAdg"
-if [ -d /mnt/sda1 ]; then
-	export log="/mnt/sda1/112.txt"
-else
-	export log="/tmp/112.txt"
-fi
+[ -d /mnt/sda1 ] && export log="/mnt/sda1/112.txt" || export log="/tmp/112.txt"
 
 [ -x "/etc/init.d/vsftpd" ] && {
 uci set vsftpd.listen.pasv_min_port='50000'
