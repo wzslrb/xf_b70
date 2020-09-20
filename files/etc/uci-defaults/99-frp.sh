@@ -3,9 +3,14 @@
 [ 0 -eq ${#h4} ] && export h4=0
 export tag="$(echo $0 | sed 's/.*\///')"
 export tit="FRP"
+if [ -d /mnt/sda1 ]; then
+	export log="/mnt/sda1/112.txt"
+else
+	export log="/tmp/112.txt"
+fi
 
 [ -x "/etc/init.d/frp" ] || {
-	logger -t "${tag}" "【${tit}】$((h4=h4+1))：" "错误未安装FRP"
+	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "错误未安装FRP" >> $log
 	exit 0
 }
 [ -f "/etc/config/frp" ] || touch /etc/config/frp
@@ -40,5 +45,5 @@ uci -q batch <<-EOF >/dev/null
 	set frp.@proxy[0].enable='1'
 	commit frp
 EOF
-logger -t "${tag}" "【${tit}】$((h4=h4+1))：" "重设frp"
+echo  "${tag}" "【${tit}】$((h4=h4+1))：" "重设frp" >> $log
 exit 0

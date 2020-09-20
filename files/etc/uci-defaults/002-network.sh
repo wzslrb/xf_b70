@@ -3,8 +3,11 @@
 [ 0 -eq ${#h4} ] && export h4=0
 export tag="$(echo $0 | sed 's/.*\///')"
 export tit="网络"
-echo "★★★测试命令:$(echo $0)"
-echo "★★★测试命令:$(echo $0 | sed 's/.*\///')"
+if [ -d /mnt/sda1 ]; then
+	export log="/mnt/sda1/112.txt"
+else
+	export log="/tmp/112.txt"
+fi
 
 uci -q batch <<-EOF >/dev/null
 	set network.lan=interface
@@ -62,12 +65,12 @@ uci -q batch <<-EOF >/dev/null
 EOF
 
 #service dnsmasq restart
-logger -t "${tag}" "【${tit}】$((h4=h4+1))：" "初始化network dhcp"
+echo  "${tag}" "【${tit}】$((h4=h4+1))：" "初始化network dhcp" >> $log
 
 uci add_list firewall.@zone[0].network='lcrm2'
 uci add_list firewall.@zone[1].network='wan2'
 uci commit firewall
 #service firewall reload
-logger -t "${tag}" "【${tit}】$((h4=h4+1))：" "初始化防火墙wan2 lcrm2"
+echo  "${tag}" "【${tit}】$((h4=h4+1))：" "初始化防火墙wan2 lcrm2" >> $log
 
 exit 0

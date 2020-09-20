@@ -3,12 +3,17 @@
 [ 0 -eq ${#h4} ] && export h4=0
 export tag="$(echo $0 | sed 's/.*\///')"
 export tit="FtpSamAdg"
+if [ -d /mnt/sda1 ]; then
+	export log="/mnt/sda1/112.txt"
+else
+	export log="/tmp/112.txt"
+fi
 
 [ -x "/etc/init.d/vsftpd" ] && {
 uci set vsftpd.listen.pasv_min_port='50000'
 uci set vsftpd.listen.pasv_max_port='51000'
 uci commit vsftpd
-logger -t "${tag}" "【${tit}】$((h4=h4+1))：" "重设vsftpd"
+echo  "${tag}" "【${tit}】$((h4=h4+1))：" "重设vsftpd" >> $log
 }
 
 [ -f "/etc/config/sqm" ] && {
@@ -21,13 +26,13 @@ uci set sqm.@queue[0].qdisc='cake'
 uci set sqm.@queue[0].script='piece_of_cake.qos'
 uci set sqm.@queue[0].enabled='1'
 uci commit sqm
-logger -t "${tag}" "【${tit}】$((h4=h4+1))：" "重设sqm"
+echo  "${tag}" "【${tit}】$((h4=h4+1))：" "重设sqm" >> $log
 }
 
 [ -d /mnt/sda1/lost\+found/AdGuardHome ] && {
 	[ -d /usr/bin/AdGuardHome ] && rm -rf /usr/bin/AdGuardHome
 	ln -nsf /mnt/sda1/lost\+found/AdGuardHome /usr/bin/AdGuardHome
-	logger -t "${tag}" "【${tit}】$((h4=h4+1))：" "重设AdGuardHome目录链接"
+	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "重设AdGuardHome目录链接" >> $log
 }
 
 [ -f "/etc/config/AdGuardHome" ] && {
@@ -45,16 +50,16 @@ uci -q batch <<-EOF >/dev/null
 	set dhcp.@dnsmasq[0].cachesize='0'
 	commit dhcp
 EOF
-logger -t "${tag}" "【${tit}】$((h4=h4+1))：" "重设AdGuardHome"
+echo  "${tag}" "【${tit}】$((h4=h4+1))：" "重设AdGuardHome" >> $log
 }
 
 [ -s "/usr/share/AdGuardHome/links.txt" ] && {
 sed -i '/\.tar\.gz/s/\.tar/_softfloat\.tar/' /usr/share/AdGuardHome/links.txt
-logger -t "${tag}" "【${tit}】$((h4=h4+1))：" "更新AdGuard Home升级路径"
+echo  "${tag}" "【${tit}】$((h4=h4+1))：" "更新AdGuard Home升级路径" >> $log
 }
 
 rm -f /usr/bin/AdGuardHome/AdGuardHome.log && {
-logger -t "${tag}" "【${tit}】$((h4=h4+1))：" "清除AdGuardHome.log"
+echo  "${tag}" "【${tit}】$((h4=h4+1))：" "清除AdGuardHome.log" >> $log
 }
 
 exit 0
