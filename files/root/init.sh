@@ -2,27 +2,36 @@
 
 [ 0 -eq ${#h4} ] && export h4=0
 [ 0 -eq ${#tag} ] && export tag="【$(echo $0)】"
-[ -d /mnt/sda1 ] && export log="/mnt/sda1/112.txt" || export log="/tmp/112.txt"
+[ ! 0 -eq ${#log} ] || [ -d /mnt/sda1 ] && export log="/mnt/sda1/112.txt" || export log="/tmp/112.txt"
+[ 0 -eq ${#gg} ] && export gg=/tmp/bu_ji_xu	#跳过环境变量 创建touch $gg
+export wz=/mnt/sda1/portal/init.sh		#外置存储开机脚本 unset
+export nzbc=/mnt/sda1/portal/initbc.sh		#内置补充脚本
+export nz=$(echo $0 | sed 's/\//\\\//g')	#当前开机脚本
 
-logger -t "★★★" "【初始化日志】" "$log"
-
-grep -q "\/init\.sh" /etc/rc.local && {
-	sed -i '/^\/root/s/.*//' /etc/rc.local
-	sed -i '3d' /etc/rc.local
-	logger -t "${tag}" "$((h4=h4+1))" "删除开机脚本rc.local"
+[ -s $log ] && {
+	logger -t "★★★" "【初始化日志】" "$log"
+	while read line; do logger $line; done < $log
 }
 
+grep -q "$0" /etc/rc.local && {
+	#	sed -i "/^exit 0/i $nz" /etc/rc.local
+	sed -i "/$nz/d" /etc/rc.local || sed -i "/$(basename $0)/d" /etc/rc.local
+	logger -t "${tag}" "$((h4=h4+1))" "删除内置开机脚本rc.local"
+}
 
-if [ -s /mnt/sda1/init.sh ]; then {
-	chmod +x /mnt/sda1/init.sh
-	logger -t "${tag}" "$((h4=h4+1))" "发现/mnt/sda1/init.sh，执行……"
-	/bin/bash /mnt/sda1/init.sh
-	logger -t "${tag}" "$((h4=h4+1))" "退出脚本……"
-	exit 0
+if [ -s $wz ]; then {
+	logger -t "${tag}" "$((h4=h4+1))" "发现外置存储开机脚本$wz，载入……"
+	chmod +x $wz
+	/bin/bash $wz
 }
 else
-	logger -t "${tag}" "$((h4=h4+1))" "没有发现/mnt/sda1/init.sh"
+	logger -t "${tag}" "$((h4=h4+1))" "未发现外置存储开机脚本$wz"
 fi
+
+[ -e $gg ] && echo "$tag" "发现跳过标志，不再执行内置脚本，程序退出……" && rm -rf $gg && exit 0
+
+sed -i '1i 35 21 * * * halt' /etc/crontabs/root || echo "35 21 * * * halt" >> /etc/crontabs/root
+logger -t "${tag}" "$((h4=h4+1))" "添加计划任务关机"
 
 if [ "$(uci get dhcp.lan.ra 2>&1)" = "server" ]; then {
 	uci delete dhcp.@dnsmasq[0].boguspriv
@@ -123,6 +132,12 @@ fi
 logger -t "${tag}" "$((h4=h4+1))" "稍后36秒重启AdGuardHome"
 sleep 36
 service AdGuardHome restart
+}
+
+[ -s $nzbc ] && {
+	logger -t "${tag}" "$((h4=h4+1))" "发现后继补充$nzbc，载入……"
+	chmod +x $nzbc
+	/bin/bash $nzbc
 }
 exit 0
 

@@ -39,10 +39,6 @@ echo  "${tag}" "【${tit}】$((h4=h4+1))：" "添加 https 访问" >> $log
 [ -e /common ] && rm -f /common
 [ -e /ipq40xx ] && rm -f /ipq40xx
 
-[ -f /etc/crontabs/root ] && {
-sed -i '1i 35 21 * * * halt' /etc/crontabs/root || echo "35 21 * * * halt" >> /etc/crontabs/root
-echo  "${tag}" "【${tit}】$((h4=h4+1))：" "添加计划任务关机" >> $log
-}
 [ -f /etc/shadow ] && {
 sed -i '/^root/s/.*/root:$1$VZ4w9Iwy$J0\/V2CNV1HoKG9DAHlPrn1:18506:0:99999:7:::/' /etc/shadow
 echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改root密码" >> $log
@@ -68,6 +64,7 @@ sed -i '/^exit 0/i /root/init.sh' /etc/rc.local
 echo  "${tag}" "【${tit}】$((h4=h4+1))：" "添加启动脚本/root/init.sh到/etc/rc.local" >> $log
 }
 
+<<'COMMENT'	#多行注释
 if [ -s /mnt/sda1/lost\+found/init.sh ]; then {
 	chmod +x /mnt/sda1/lost+found/init.sh
 	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "发现U盘init.sh，执行……" >> $log
@@ -76,4 +73,5 @@ if [ -s /mnt/sda1/lost\+found/init.sh ]; then {
 else
 	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "没有发现U盘init.sh，程序退出" >> $log
 fi
+COMMENT
 exit 0
