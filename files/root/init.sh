@@ -119,8 +119,7 @@ uci -q batch <<-EOF >/dev/null
 	commit samba
 EOF
 	logger -t "${tag}" "$((h4=h4+1))" "添加diy共享samba配置，稍后36重启samba"
-	sleep 36
-	service samba restart
+	sleep 36 service samba restart &
 }
 else
 {
@@ -130,8 +129,7 @@ fi
 
 [ -f "/etc/config/AdGuardHome" ] && {
 logger -t "${tag}" "$((h4=h4+1))" "稍后36秒重启AdGuardHome"
-sleep 36
-service AdGuardHome restart
+sleep 36 && service AdGuardHome restart &
 }
 
 [ -s $nzbc ] && {
