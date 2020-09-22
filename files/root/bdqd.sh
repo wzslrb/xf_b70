@@ -121,7 +121,7 @@ uci -q batch <<-EOF >/dev/null
 	commit samba
 EOF
 	logger -t "${tag}" "$((h4=h4+1))" "添加diy共享samba配置，稍后36重启samba"
-	sleep 36 service samba restart &
+	sleep 36 && service samba restart &
 }
 else
 {
