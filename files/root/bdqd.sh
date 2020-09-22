@@ -1,22 +1,24 @@
 #!/bin/sh
 
+unset wz hjbc nz
 [ 0 -eq ${#h4} ] && export h4=0
 [ 0 -eq ${#tag} ] && export tag="【$(echo $0)】"
 [ ! 0 -eq ${#log} ] || [ -d /mnt/sda1 ] && export log="/mnt/sda1/112.txt" || export log="/tmp/112.txt"
 [ 0 -eq ${#gg} ] && export gg=/tmp/bu_ji_xu	#跳过环境变量 创建touch $gg
 export wz=/mnt/sda1/portal/init.sh		#外置存储开机脚本 unset
-export nzbc=/mnt/sda1/portal/initbc.sh		#内置补充脚本
-export nz=$(echo $0 | sed 's/\//\\\//g')	#当前开机脚本
+export hjbc=/mnt/sda1/portal/initbc.sh		#内置补充脚本
+export bdqd=$(echo $0 | sed 's/\//\\\//g')	#本地启动脚本
 
 [ -s $log ] && {
-	logger -t "★★★" "【初始化日志】" "$log"
+	logger -t "${tag}" "★载入初始化日志★:" "$log"
 	while read line; do logger $line; done < $log
+	rm -f $log
 }
 
 grep -q "$0" /etc/rc.local && {
-	#	sed -i "/^exit 0/i $nz" /etc/rc.local
-	sed -i "/$nz/d" /etc/rc.local || sed -i "/$(basename $0)/d" /etc/rc.local
-	logger -t "${tag}" "$((h4=h4+1))" "删除内置开机脚本rc.local"
+	#	sed -i "/^exit 0/i $bdqd" /etc/rc.local
+	sed -i "/$bdqd/d" /etc/rc.local || sed -i "/$(basename $0)/d" /etc/rc.local
+	logger -t "${tag}" "$((h4=h4+1))" "删除/etc/rc.local本地启动脚本${bdqd}"
 }
 
 if [ -s $wz ]; then {
@@ -132,10 +134,15 @@ logger -t "${tag}" "$((h4=h4+1))" "稍后36秒重启AdGuardHome"
 sleep 36 && service AdGuardHome restart &
 }
 
-[ -s $nzbc ] && {
-	logger -t "${tag}" "$((h4=h4+1))" "发现后继补充$nzbc，载入……"
-	chmod +x $nzbc
-	/bin/bash $nzbc
+
+if [ -s $hjbc ]; then {
+	logger -t "${tag}" "$((h4=h4+1))" "发现后继补充$hjbc，载入……"
+	chmod +x $hjbc
+	/bin/bash $hjbc
 }
+else
+	logger -t "${tag}" "$((h4=h4+1))" "未发现后继补充$hjbc，程序退出……"
+fi
+
 exit 0
 

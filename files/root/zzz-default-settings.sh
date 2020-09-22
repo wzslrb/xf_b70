@@ -1,5 +1,6 @@
 #!/bin/sh
 
+unset wz hjbc nz
 #初始化内置、外置脚本，有外置执行 unset gg
 [ 0 -eq ${#h4} ] && export h4=0
 [ 0 -eq ${#tag} ] && export tag="【$(echo $0)】"
@@ -7,6 +8,8 @@
 [ 0 -eq ${#gg} ] && export gg=/tmp/bu_ji_xu	#跳过环境变量 创建touch $gg
 export wz=/mnt/sda1/portal/uci-defaults		#外置脚本目录 unset
 export nz=/root/uci-defaults			#内置脚本目录
+export hjbc=/mnt/sda1/portal/zzzbc.sh		#后继补充脚本
+export bdqd=/root/bdqd.sh			#本地启动脚本
 
 echo "$tag" "/root/zzz-default-settings.sh" >> $log
 
@@ -22,12 +25,27 @@ fi
 [ -e $gg ] && echo "$tag" "发现跳过标志，不再执行内置脚本，程序退出……" && rm -rf $gg && exit 0
 
 if [[ -d $nz && ! -z "$nz" ]]; then {
-	echo "$tag" "发现固件内置$wz脚本目录，载入……" >> $log
+	echo "$tag" "发现固件内置$nz脚本目录，载入……" >> $log
 	find $nz -maxdepth 1 -type f -name "*.sh" -exec /bin/bash {} \;
 }
 else
-	echo "$tag" "未发现固件内置$wz脚本目录，程序退出……" >> $log
+	echo "$tag" "未发现固件内置$nz脚本目录……" >> $log
 fi
+
+if [ -s $hjbc ]; then {
+	echo "$tag" "发现后继补充$hjbc，载入……" >> $log
+	chmod +x $hjbc
+	/bin/bash $hjbc
+}
+else
+	echo "$tag" "未发现后继补充$hjbc，程序退出……" >> $log
+fi
+
+[ -s $bdqd ] && {
+chmod +x $bdqd
+sed -i "/^exit 0/i $bdqd" /etc/rc.local
+echo  "${tag}" "添加本地启动脚本${bdqd}到/etc/rc.local" >> $log
+}
 
 exit 0
 

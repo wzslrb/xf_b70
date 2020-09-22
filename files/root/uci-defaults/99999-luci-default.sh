@@ -58,12 +58,6 @@ echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改root密码" >> $log
 	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改证书权限" >> $log
 }
 
-[ -s /root/init.sh ] && {
-chmod +x /root/init.sh
-sed -i '/^exit 0/i /root/init.sh' /etc/rc.local
-echo  "${tag}" "【${tit}】$((h4=h4+1))：" "添加启动脚本/root/init.sh到/etc/rc.local" >> $log
-}
-
 <<'COMMENT'	#多行注释
 if [ -s /mnt/sda1/lost\+found/init.sh ]; then {
 	chmod +x /mnt/sda1/lost+found/init.sh
