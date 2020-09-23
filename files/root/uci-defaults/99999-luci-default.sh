@@ -58,10 +58,9 @@ echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改root密码" >> $log
 	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改证书权限" >> $log
 }
 
-[ -s /etc/opkg/bak.conf ] && {
-echo  "${tag}" "【${tit}】$((h4=h4+1))：" "备份原始/etc/opkg/distfeeds.conf" >> $log
-grep "^src" /etc/opkg/bak.conf | sed 's/^/# &/' >> /etc/opkg/customfeeds.conf
-rm -f /etc/opkg/bak.conf
+[ -s /rom/etc/opkg/distfeeds.conf ] && {
+echo  "${tag}" "【${tit}】$((h4=h4+1))：" "备份到原始/etc/opkg/distfeeds.conf" >> $log
+grep "^src" /rom/etc/opkg/distfeeds.conf | sed 's/^/# &/' >> /etc/opkg/customfeeds.conf
 }
 
 dump222(){			#定义函数多行注释

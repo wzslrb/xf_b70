@@ -6,7 +6,7 @@ unset wz hjbc nz
 [ ! 0 -eq ${#log} ] || [ -d /mnt/sda1 ] && export log="/mnt/sda1/112.txt" || export log="/tmp/112.txt"
 [ 0 -eq ${#gg} ] && export gg=/tmp/bu_ji_xu	#跳过环境变量 创建touch $gg
 export wz=/mnt/sda1/portal/init.sh		#外置存储开机脚本 unset
-export hjbc=/mnt/sda1/portal/initbc.sh		#内置补充脚本
+export hjbc=/mnt/sda1/portal/bdqdbc.sh		#内置补充脚本
 export bdqd=$(echo $0 | sed 's/\//\\\//g')	#本地启动脚本
 
 [ -s $log ] && {
