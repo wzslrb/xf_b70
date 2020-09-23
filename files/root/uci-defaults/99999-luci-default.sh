@@ -58,14 +58,20 @@ echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改root密码" >> $log
 	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改证书权限" >> $log
 }
 
-<<'COMMENT'	#多行注释
+[ -s /etc/opkg/bak.conf ] && {
+echo  "${tag}" "【${tit}】$((h4=h4+1))：" "备份原始/etc/opkg/distfeeds.conf" >> $log
+grep "^src" /etc/opkg/bak.conf | sed 's/^/# &/' >> /etc/opkg/customfeeds.conf
+rm -f /etc/opkg/bak.conf
+}
+
+dump222(){			#定义函数多行注释
 if [ -s /mnt/sda1/lost\+found/init.sh ]; then {
 	chmod +x /mnt/sda1/lost+found/init.sh
 	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "发现U盘init.sh，执行……" >> $log
 	/bin/bash /mnt/sda1/lost+found/init.sh
 }
 else
-	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "没有发现U盘init.sh，程序退出" >> $log
+	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "没有发现U盘init.sh，……" >> $log
 fi
-COMMENT
+}
 exit 0
