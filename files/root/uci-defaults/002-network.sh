@@ -5,6 +5,8 @@ export tag="$(echo $0 | sed 's/.*\///')"
 export tit="网络"
 [ -d /mnt/sda1 ] && export log="/mnt/sda1/112.txt" || export log="/tmp/112.txt"
 
+cp /etc/config/dhcp /mnt/sda1/temp
+echo  "${tag}" "【${tit}】$((h4=h4+1))：" "备份/etc/config/dhcp /mnt/sda1/temp" >> $log
 uci -q batch <<-EOF >/dev/null
 	set network.lan=interface
 	set network.lan.type='bridge'
@@ -13,7 +15,7 @@ uci -q batch <<-EOF >/dev/null
 	set network.lan._orig_ifname='lan1 lan3 ra0 rai0 wlan0'
 	set network.lan._orig_bridge='true'
 	set network.lan.ipaddr='192.168.200.1'
-	set network.lan.ifname='lan1 lan3'
+	set network.lan.ifname='lan1'
 
 	set network.lcrm2=interface
 	set network.lcrm2.type='bridge'

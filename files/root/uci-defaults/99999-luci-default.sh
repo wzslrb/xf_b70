@@ -11,17 +11,30 @@ export tit="杂项"
 uci set luci.main.lang=zh_cn
 uci set luci.main.mediaurlbase='/luci-static/bootstrap'
 uci commit luci
+
+uci set system.@system[0].log_size='840'
+[ -d /mnt/sda1/portal ] && {
+	rm -f /mnt/sda1/portal/system.log
+	touch /mnt/sda1/portal/system.log
+	uci set system.@system[0].log_file='/mnt/sda1/portal/system.log'
+}
 uci set system.@system[0].hostname='B70'
+uci delete system.ntp.enable_server
 uci commit system
 
 echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改主题、hostname" >> $log
 #重建ssh链接
+
+[ -e /usr/bin/openssh-ssh ] && {
 cd /usr/bin
 mv ssh dropbear-ssh
 mv scp dropbear-scp
 ln -s /usr/bin/openssh-ssh ssh
 ln -s /usr/bin/openssh-scp scp
-echo  "${tag}" "【${tit}】$((h4=h4+1))：" "更新ssh链接" >> $log
+sed -i "/StrictHostKeyChecking/s/^#[[:space:]]*//" /etc/ssh/ssh_config
+sed -i "/StrictHostKeyChecking/s/ask/no/" /etc/ssh/ssh_config
+echo  "${tag}" "【${tit}】$((h4=h4+1))：" "更新ssh链接,登录免提示……" >> $log
+}
 
 
 #主机短别名
@@ -62,6 +75,10 @@ echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改root密码" >> $log
 echo  "${tag}" "【${tit}】$((h4=h4+1))：" "备份到原始/etc/opkg/distfeeds.conf" >> $log
 grep "^src" /rom/etc/opkg/distfeeds.conf | sed 's/^/# &/' >> /etc/opkg/customfeeds.conf
 }
+
+sed -i /dhcp\.lan\./d /etc/uci-defaults/odhcpd.defaults
+cp /etc/uci-defaults/odhcpd.defaults /mnt/sda1/temp 
+echo  "${tag}" "【${tit}】$((h4=h4+1))：" "备份/etc/uci-defaults/odhcpd.defaults /mnt/sda1/temp" >> $log
 
 dump222(){			#定义函数多行注释
 if [ -s /mnt/sda1/lost\+found/init.sh ]; then {

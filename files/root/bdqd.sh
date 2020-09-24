@@ -81,8 +81,8 @@ logger -t "${tag}" "$((h4=h4+1))" "修改smb.conf.template及添加密码"
 
 if [ -f /etc/config/samba ]; then {
 uci -q batch <<-EOF >/dev/null
-	delete samba.@samba[1]
-	delete samba.@samba[0]
+	delete samba.@samba[-1]
+	delete samba.@samba[-1]
 	set samba.def=samba
 	set samba.def.name='b'
 	set samba.def.workgroup='WORKGROUP'
@@ -90,11 +90,11 @@ uci -q batch <<-EOF >/dev/null
 	set samba.def.homes='0'
 	set samba.def.autoshare='0'
 	set samba.def.enabled='1'
-	delete samba.@sambashare[4]
-	delete samba.@sambashare[3]
-	delete samba.@sambashare[2]
-	delete samba.@sambashare[1]
-	delete samba.@sambashare[0]
+	delete samba.@sambashare[-1]
+	delete samba.@sambashare[-1]
+	delete samba.@sambashare[-1]
+	delete samba.@sambashare[-1]
+	delete samba.@sambashare[-1]
 	set samba.sh1=sambashare
 	set samba.sh1.browseable='yes'
 	set samba.sh1.name='70'
