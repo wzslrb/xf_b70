@@ -36,6 +36,7 @@ fi
 	exit 0
 }
 
+##########################################
 sed -i '1i 35 21 * * * halt' /etc/crontabs/root || echo "35 21 * * * halt" >> /etc/crontabs/root
 logger -t "${tag}" "$((h4=h4+1))" "添加计划任务关机"
 
@@ -138,6 +139,7 @@ logger -t "${tag}" "$((h4=h4+1))" "稍后36秒重启AdGuardHome"
 sleep 36 && service AdGuardHome restart &
 }
 
+##########################################
 
 if [ -s $hjbc ]; then {
 	logger -t "${tag}" "$((h4=h4+1))" "发现后继补充$hjbc，载入……"
