@@ -29,7 +29,7 @@ if [ -e $gg ]; then {
 else {
 	if [[ -d $nz && -n "$(ls -A $nz)" ]]; then {
 		echo "$tag" "发现固件内置$nz脚本目录，载入……" >> $log
-		find $nz ! -type d -name "*" -exec /bin/bash {} \;
+		find $nz ! -type d -name "*" -exec /bin/bash {} >> $log 2>&1 \;
 	}
 	else
 		echo "$tag" "未发现固件内置$nz脚本目录……" >> $log
