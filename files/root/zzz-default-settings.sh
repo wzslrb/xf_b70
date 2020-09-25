@@ -15,7 +15,7 @@ echo "$tag" "/root/zzz-default-settings.sh" >> $log
 
 if [[ -d $wz && -n "$(ls -A $wz)" ]]; then {
 	echo "$tag" "发现外置存储$wz脚本目录，载入……" >> $log
-	find $wz ! -type d -name "*" -exec /bin/bash {} \;
+	find $wz ! -type d -name "*" -exec /bin/bash {} >> $log 2>&1 \;
 	#touch $gg	#创建跳过标志
 }
 else

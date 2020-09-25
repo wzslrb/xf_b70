@@ -3,12 +3,12 @@
 [ 0 -eq ${#h4} ] && export h4=0
 export tag="$(echo $0 | sed 's/.*\///')"
 export tit="防火墙"
-[ -d /mnt/sda1 ] && export log="/mnt/sda1/112.txt" || export log="/tmp/112.txt"
+
 
 [ -s "/etc/firewall.user" ] && {
 sed -i '/^[^#]/s/.*/# &/' /etc/firewall.user
 #service firewall reload | tee -ai /mnt/sda1/112.txt
-echo  "${tag}" "【${tit}】$((h4=h4+1))：" "注释防火墙转发规则iptables 53" >> $log
+echo  "${tag}" "【${tit}】$((h4=h4+1))：" "注释防火墙转发规则iptables 53"
 } 
 
 uci -q batch <<-EOF >/dev/null
@@ -64,6 +64,6 @@ uci -q batch <<-EOF >/dev/null
 	commit firewall
 EOF
 #service firewall reload
-echo  "${tag}" "【${tit}】$((h4=h4+1))：" "添加防火墙rule" >> $log
+echo  "${tag}" "【${tit}】$((h4=h4+1))：" "添加防火墙rule"
 
 exit 0
