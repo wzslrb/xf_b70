@@ -4,8 +4,6 @@
 export tag="$(echo $0 | sed 's/.*\///')"
 export tit="网络"
 
-
-cp /etc/config/network /mnt/sda1/temp
 echo  "${tag}" "【${tit}】$((h4=h4+1))：" "备份/etc/config/network /mnt/sda1/temp"
 uci -q batch <<-EOF >/dev/null
 	set network.lan._orig_ifname='lan1 lan3 ra0 rai0 wlan0'

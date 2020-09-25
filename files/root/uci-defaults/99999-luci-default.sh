@@ -76,7 +76,8 @@ echo  "${tag}" "【${tit}】$((h4=h4+1))：" "添加自定义/etc/opkg/distfeeds
 grep "^src" /rom/etc/opkg/distfeeds.conf | sed 's/^/# &/' >> /etc/opkg/customfeeds.conf
 }
 
-sed -i /dhcp\.lan\./d /etc/uci-defaults/odhcpd.defaults
+# sed -i /dhcp\.lan\./d /etc/uci-defaults/odhcpd.defaults
+rm -f /etc/uci-defaults/odhcpd.defaults
 echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改/etc/uci-defaults/odhcpd.defaults"
 
 dump222(){			#定义函数多行注释
