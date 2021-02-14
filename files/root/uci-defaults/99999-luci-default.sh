@@ -12,12 +12,22 @@ uci set luci.main.lang=zh_cn
 uci set luci.main.mediaurlbase='/luci-static/bootstrap'
 uci commit luci
 
-uci set system.@system[0].log_size='840'
-[ -d /mnt/sda1/portal ] && {
-	rm -f /mnt/sda1/portal/system.log
-	touch /mnt/sda1/portal/system.log
-	uci set system.@system[0].log_file='/mnt/sda1/portal/system.log'
+[ -f "/etc/config/fstab" ] && {
+	uci set fstab.@global[0].auto_swap='1'
+	uci set fstab.@global[0].auto_mount='1'
+	uci set fstab.@global[0].anon_mount='1'
+	uci set fstab.@mount[0].enabled='1'
+	uci commit fstab
+	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "设置U盘自动挂载"
 }
+
+# 流量统计nlbwmon
+uci set nlbwmon.@nlbwmon[0].commit_interval='128s'
+uci set nlbwmon.@nlbwmon[0].database_directory='/mnt/sda1/portal/nlbwmon'
+uci set nlbwmon.@nlbwmon[0].database_generations='840'
+uci commit nlbwmon
+
+uci set system.@system[0].log_size='840'
 uci set system.@system[0].hostname='B70'
 uci delete system.ntp.enable_server
 uci commit system
@@ -60,15 +70,29 @@ echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改root密码"
 	uci delete aria2.main.bt_tracker
 	uci set aria2.main.enable_log='false'
 	uci set aria2.main.enabled='1'
-	uci set aria2.main.rpc_auth_method='none'
+	uci set aria2.main.rpc_auth_method='token'
+	uci set aria2.main.rpc_secret='7907298'
+
 	uci commit aria2
 	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "设置默认启动启动aria2"
+#	ln -nsf /mnt/sda1/portal/wifidog /www/wifidog		'none'
 }
 
+[ -x "/mnt/sda1/portal/pause" ] && cp /mnt/sda1/portal/pause /usr/bin/
+
+
 #修改证书权限
-[ -s /etc/dropbear/id_rsa ] && {
+[ -d "/mnt/sda1/portal/ssh/ ] && {
+	cp -s /mnt/sda1/portal/ssh/dropbear/* /etc/dropbear/
+	ln -s /mnt/sda1/portal/ssh/root/.git-credentials /root/.git-credentials
+	ln -s /mnt/sda1/portal/ssh/root/.gitconfig /root/.gitconfig
+	ln -s /mnt/sda1/portal/ssh/root/.ssh /root/.ssh
+	ln -s /mnt/sda1/portal/ssh/root/.wgetrc /root/.wgetrc
 	chmod 0400 /etc/dropbear/id_rsa
-	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改证书权限"
+	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改SSH证书权限"
+	uci delete dropbear.@dropbear[0].Interface
+	uci set dropbear.@dropbear[0].PasswordAuth='on'
+	uci commit dropbear
 }
 
 [ -s /rom/etc/opkg/distfeeds.conf ] && {

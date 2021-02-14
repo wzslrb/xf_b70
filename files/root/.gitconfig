@@ -1,7 +1,0 @@
-[user]
-	name = wzslrb
-	email = yanriqingquan@gmail.com
-[credential]
-	helper = store
-[core]
-        autocrlf = input

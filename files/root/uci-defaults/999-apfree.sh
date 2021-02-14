@@ -31,6 +31,7 @@ sed -i "/WiredPassed/a\\\t\tGatewayPort 8040" /etc/init.d/wifidogx
 #重建apfee目录
 [ -d "/mnt/sda1/portal/wifidog" ] && {
 	ln -nsf /mnt/sda1/portal/wifidog /www/wifidog
+	ln -nsf /mnt/sda1/portal/wifidog/login/wifidog2.sh /www/cgi-bin/wifidogx2.js
 	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "重建apfee目录"
 }
 

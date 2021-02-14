@@ -38,6 +38,7 @@ uci -q batch <<-EOF >/dev/null
 	delete dhcp.@dnsmasq[0].boguspriv
 	delete dhcp.@dnsmasq[0].filterwin2k
 	delete dhcp.@dnsmasq[0].nonegcache
+	set dhcp.@dnsmasq[0].port=53
 	set dhcp.lcrm2=dhcp
 	set dhcp.lcrm2.start='100'
 	set dhcp.lcrm2.leasetime='12h'
