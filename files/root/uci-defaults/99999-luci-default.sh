@@ -12,15 +12,6 @@ uci set luci.main.lang=zh_cn
 uci set luci.main.mediaurlbase='/luci-static/bootstrap'
 uci commit luci
 
-[ -f "/etc/config/fstab" ] && {
-	uci set fstab.@global[0].auto_swap='1'
-	uci set fstab.@global[0].auto_mount='1'
-	uci set fstab.@global[0].anon_mount='1'
-	uci set fstab.@mount[0].enabled='1'
-	uci commit fstab
-	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "设置U盘自动挂载"
-}
-
 # 流量统计nlbwmon
 uci set nlbwmon.@nlbwmon[0].commit_interval='128s'
 uci set nlbwmon.@nlbwmon[0].database_directory='/mnt/sda1/portal/nlbwmon'
@@ -82,7 +73,7 @@ echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改root密码"
 
 
 #修改证书权限
-[ -d "/mnt/sda1/portal/ssh/ ] && {
+[ -d "/mnt/sda1/portal/ssh/" ] && {
 	cp -s /mnt/sda1/portal/ssh/dropbear/* /etc/dropbear/
 	ln -s /mnt/sda1/portal/ssh/root/.git-credentials /root/.git-credentials
 	ln -s /mnt/sda1/portal/ssh/root/.gitconfig /root/.gitconfig

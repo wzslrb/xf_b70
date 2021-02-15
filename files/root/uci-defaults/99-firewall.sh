@@ -11,7 +11,9 @@ sed -i '/^[^#]/s/.*/# &/' /etc/firewall.user
 echo  "${tag}" "【${tit}】$((h4=h4+1))：" "注释防火墙转发规则iptables 53"
 } 
 
+# 开启默认转发forward='ACCEPT'
 uci -q batch <<-EOF >/dev/null
+	set firewall.@defaults[0].forward='ACCEPT'
 	set firewall.web=rule
 	set firewall.web.target='ACCEPT'
 	set firewall.web.src='wan'

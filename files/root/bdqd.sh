@@ -9,6 +9,8 @@ export wz=/mnt/sda1/portal/bdqd_wz.sh		#外置存储开机脚本 unset
 export hjbc=/mnt/sda1/portal/bdqd_bc.sh		#内置补充脚本
 export bdqd=$(echo $0 | sed 's/\//\\\//g')	#本地启动脚本
 
+logger -t "${tag}" '日志文件$log:' "$log"
+
 [ -s $log ] && {
 	logger -t "${tag}" "★载入初始化日志★:" "$log"
 	while read line; do logger $line; done < $log

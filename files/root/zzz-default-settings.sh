@@ -12,6 +12,7 @@ export hjbc=/mnt/sda1/portal/zzzbc.sh		#后继补充脚本
 export bdqd=/root/bdqd.sh			#本地启动脚本
 
 echo "$tag" "/root/zzz-default-settings.sh" >> $log
+echo "$tag" '日志文件$log:' "$log" >> $log
 
 if [[ -d $wz && -n "$(ls -A $wz)" ]]; then {
 	echo "$tag" "发现外置存储$wz脚本目录，载入……" >> $log
