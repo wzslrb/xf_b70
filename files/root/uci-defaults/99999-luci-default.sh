@@ -9,7 +9,7 @@ export tit="杂项"
 #[ ! -f /mnt/sda1/112.txt ] && touch /mnt/sda1/112.txt
 
 uci set luci.main.lang=zh_cn
-uci set luci.main.mediaurlbase='/luci-static/bootstrap'
+uci set luci.main.mediaurlbase='/luci-static/material'
 uci commit luci
 
 # 流量统计nlbwmon
@@ -73,17 +73,17 @@ echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改root密码"
 
 
 #修改证书权限
+uci delete dropbear.@dropbear[0].Interface
+uci set dropbear.@dropbear[0].PasswordAuth='on'
+uci commit dropbear
 [ -d "/mnt/sda1/portal/ssh/" ] && {
 	cp -s /mnt/sda1/portal/ssh/dropbear/* /etc/dropbear/
-	ln -s /mnt/sda1/portal/ssh/root/.git-credentials /root/.git-credentials
-	ln -s /mnt/sda1/portal/ssh/root/.gitconfig /root/.gitconfig
+	cp -f /mnt/sda1/portal/ssh/root/.git-credentials /root/
+	cp -f /mnt/sda1/portal/ssh/root/.gitconfig /root/.gitconfig
 	ln -s /mnt/sda1/portal/ssh/root/.ssh /root/.ssh
-	ln -s /mnt/sda1/portal/ssh/root/.wgetrc /root/.wgetrc
+	cp -f /mnt/sda1/portal/ssh/root/.wgetrc /root/.wgetrc
 	chmod 0400 /etc/dropbear/id_rsa
 	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改SSH证书权限"
-	uci delete dropbear.@dropbear[0].Interface
-	uci set dropbear.@dropbear[0].PasswordAuth='on'
-	uci commit dropbear
 }
 
 [ -s /rom/etc/opkg/distfeeds.conf ] && {
