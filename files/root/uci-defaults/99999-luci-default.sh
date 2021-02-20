@@ -8,22 +8,18 @@ export tit="杂项"
 
 #[ ! -f /mnt/sda1/112.txt ] && touch /mnt/sda1/112.txt
 
-uci set luci.main.lang=zh_cn
-uci set luci.main.mediaurlbase='/luci-static/material'
-uci commit luci
-
 # 流量统计nlbwmon
-uci set nlbwmon.@nlbwmon[0].commit_interval='128s'
-uci set nlbwmon.@nlbwmon[0].database_directory='/mnt/sda1/portal/nlbwmon'
-uci set nlbwmon.@nlbwmon[0].database_generations='840'
-uci commit nlbwmon
+# uci set nlbwmon.@nlbwmon[0].commit_interval='128s'
+# uci set nlbwmon.@nlbwmon[0].database_directory='/mnt/sda1/portal/nlbwmon'
+# uci set nlbwmon.@nlbwmon[0].database_generations='840'
+# uci commit nlbwmon
 
 uci set system.@system[0].log_size='840'
 uci set system.@system[0].hostname='B70'
 uci delete system.ntp.enable_server
 uci commit system
 
-echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改主题、hostname"
+# echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改主题、hostname"
 #重建ssh链接
 
 [ -e /usr/bin/openssh-ssh ] && {
@@ -94,6 +90,20 @@ grep "^src" /rom/etc/opkg/distfeeds.conf | sed 's/^/# &/' >> /etc/opkg/customfee
 # sed -i /dhcp\.lan\./d /etc/uci-defaults/odhcpd.defaults
 rm -f /etc/uci-defaults/odhcpd.defaults
 echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改/etc/uci-defaults/odhcpd.defaults"
+
+
+debuglog=/mnt/sda1/portal/ssh/99-log.sh
+[ -f ${debuglog} ] && {
+	for hnp in $(ls -d /etc/hotplug.d/*);do
+	cp -f ${debuglog} ${hnp}/
+	done
+	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "记录hotplug.d事件日志"
+}
+
+[ -x /mnt/sda1/opt/onmp/in.sh ] && {
+	sh /mnt/sda1/opt/onmp/in.sh
+	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "安装entware环境"
+}
 
 dump222(){			#定义函数多行注释
 if [ -s /mnt/sda1/lost\+found/init.sh ]; then {

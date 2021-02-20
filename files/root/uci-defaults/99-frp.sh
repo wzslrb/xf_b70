@@ -4,30 +4,17 @@
 export tag="$(echo $0 | sed 's/.*\///')"
 export tit="FRP"
 if [ -x "/etc/init.d/zerotier" ]; then
-	uci set zerotier.sample_config.enabled='1'
-	uci delete zerotier.sample_config.join
-	uci add_list zerotier.sample_config.join='8850338390291d00'
-	uci set zerotier.sample_config.nat='1'
-	uci set zerotier.sample_config.secret='9b4d1ee446:0:0a1e9d6cbc0fc0511191e8fc5b451f63ba3ba150ef31637a52500fc92ae8ca1f7cde39ad8e1dfab9758303f753975e9a32f129d8edf72722bbcf214f1c65be7a:66697dc740eb7f45b56940c1d48ed4a2a338cba35deeda4127488c7da2a6e7955bea427729b72c5e5eae1090d0f962b49fb2b79ea5ece510ceedc5560d9f3309'
-	uci set network.zerotier=interface
-	uci set network.zerotier.proto='static'
-	uci set network.zerotier.ifname='ztbpabvhuq'
-	uci set network.zerotier.ipaddr='172.2.2.2'
-	uci set network.zerotier.netmask='255.255.255.0'
-	uci set firewall.zerotier=include
-	uci set firewall.zerotier.type='script'
-	uci set firewall.zerotier.path='/etc/zerotier.start'
-	uci set firewall.zerotier.reload='1'
-	uci set firewall.zerotier2=zone
-	uci set firewall.zerotier2.name='zerotier'
-	uci set firewall.zerotier2.input='ACCEPT'
-	uci set firewall.zerotier2.forward='ACCEPT'
-	uci set firewall.zerotier2.output='ACCEPT'
-	uci set firewall.zerotier2.network='zerotier'
-	uci commit
-	sed -i '$a\iptables -I FORWARD -i ztbpabvhuq -j ACCEPT' /etc/firewall.user
-	sed -i '$a\iptables -I FORWARD -o ztbpabvhuq -j ACCEPT' /etc/firewall.user
-	sed -i '$a\iptables -t nat -I POSTROUTING -o ztbpabvhuq -j MASQUERADE' /etc/firewall.user
+	sed -i '/option enabled/s/0/1/' /etc/config/zerotier
+	sed -i "\$a\\        option nat '1'" /etc/config/zerotier
+	sed -i '/\slist/s/\w\{16\}/8850338390291d00/g' /etc/config/zerotier
+	sed -i '/option secret/s/\S*$/'"'9b4d1ee446:0:0a1e9d6cbc0fc0511191e8fc5b451f63ba3ba150ef31637a52500fc92ae8ca1f7cde39ad8e1dfab9758303f753975e9a32f129d8edf72722bbcf214f1c65be7a:66697dc740eb7f45b56940c1d48ed4a2a338cba35deeda4127488c7da2a6e7955bea427729b72c5e5eae1090d0f962b49fb2b79ea5ece510ceedc5560d9f3309'/" /etc/config/zerotier
+	# 替换脚本 firewall.zerotier.path='/etc/zerotier.start'
+	[ -d /mnt/sda1/portal/ssh/zero ] && {
+		[ -d /etc/config/zero ] && rm -rf /etc/config/zero
+		ln -s /mnt/sda1/portal/ssh/zero /etc/config/zero
+		cp -f /mnt/sda1/portal/ssh/zerotier.sh /etc/zerotier.start
+		chmod +x /etc/zerotier.start
+	}
 	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "zerotier初始化"
 fi
 

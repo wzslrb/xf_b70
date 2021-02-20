@@ -17,6 +17,10 @@ logger -t "${tag}" '日志文件$log:' "$log"
 	rm -f $log
 }
 
+uci set luci.main.lang=zh_cn
+uci set luci.main.mediaurlbase='/luci-static/material'
+uci commit luci
+
 grep -q "$0" /etc/rc.local && {
 	#	sed -i "/^exit 0/i $bdqd" /etc/rc.local
 	sed -i "/$bdqd/d" /etc/rc.local || sed -i "/$(basename $0)/d" /etc/rc.local
