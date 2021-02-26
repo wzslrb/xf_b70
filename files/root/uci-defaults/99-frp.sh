@@ -9,10 +9,10 @@ if [ -x "/etc/init.d/zerotier" ]; then
 	sed -i '/\slist/s/\w\{16\}/8850338390291d00/g' /etc/config/zerotier
 	sed -i '/option secret/s/\S*$/'"'9b4d1ee446:0:0a1e9d6cbc0fc0511191e8fc5b451f63ba3ba150ef31637a52500fc92ae8ca1f7cde39ad8e1dfab9758303f753975e9a32f129d8edf72722bbcf214f1c65be7a:66697dc740eb7f45b56940c1d48ed4a2a338cba35deeda4127488c7da2a6e7955bea427729b72c5e5eae1090d0f962b49fb2b79ea5ece510ceedc5560d9f3309'/" /etc/config/zerotier
 	# 替换脚本 firewall.zerotier.path='/etc/zerotier.start'
-	[ -d /mnt/sda1/portal/ssh/zero ] && {
-		[ -d /etc/config/zero ] && rm -rf /etc/config/zero
-		ln -s /mnt/sda1/portal/ssh/zero /etc/config/zero
-		cp -f /mnt/sda1/portal/ssh/zerotier.sh /etc/zerotier.start
+	[ -d /mnt/sda1/opt/etc/confit/zero ] && {
+		rm -rf /etc/config/zero
+		ln -s /mnt/sda1/opt/etc/confit/zero /etc/config/zero
+		cp -f /mnt/sda1/opt/etc/zerotier.sh /etc/zerotier.start
 		chmod +x /etc/zerotier.start
 	}
 	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "zerotier初始化"

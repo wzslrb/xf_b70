@@ -72,14 +72,16 @@ echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改root密码"
 uci delete dropbear.@dropbear[0].Interface
 uci set dropbear.@dropbear[0].PasswordAuth='on'
 uci commit dropbear
-[ -d "/mnt/sda1/portal/ssh/" ] && {
-	cp -s /mnt/sda1/portal/ssh/dropbear/* /etc/dropbear/
-	cp -f /mnt/sda1/portal/ssh/root/.git-credentials /root/
-	cp -f /mnt/sda1/portal/ssh/root/.gitconfig /root/.gitconfig
-	ln -s /mnt/sda1/portal/ssh/root/.ssh /root/.ssh
-	cp -f /mnt/sda1/portal/ssh/root/.wgetrc /root/.wgetrc
+[ -d "/mnt/sda1/opt/etc/dropbear/" ] && {
+	cp /mnt/sda1/opt/etc/dropbear/* /etc/dropbear/
 	chmod 0400 /etc/dropbear/id_rsa
 	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改SSH证书权限"
+}
+
+[ -d "/mnt/sda1/opt/var/opkg-list" ] && {
+	sed -i '/^lists_dir/s/.*/lists_dir ext \/opt\/var\/opkg-list/' /etc/opkg.conf
+	echo 'dest udisk /mnt/sda1/bin' >> /etc/opkg.conf
+	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改opkg.conf"
 }
 
 [ -s /rom/etc/opkg/distfeeds.conf ] && {
@@ -92,7 +94,7 @@ rm -f /etc/uci-defaults/odhcpd.defaults
 echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改/etc/uci-defaults/odhcpd.defaults"
 
 
-debuglog=/mnt/sda1/portal/ssh/99-log.sh
+debuglog=/mnt/sda1/portal/ssh/99-hotplug.sh
 [ -f ${debuglog} ] && {
 	for hnp in $(ls -d /etc/hotplug.d/*);do
 	cp -f ${debuglog} ${hnp}/
@@ -101,9 +103,21 @@ debuglog=/mnt/sda1/portal/ssh/99-log.sh
 }
 
 [ -x /mnt/sda1/opt/onmp/in.sh ] && {
-	sh /mnt/sda1/opt/onmp/in.sh
+	sh /mnt/sda1/opt/onmp/in.sh >/dev/null 2>&1
 	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "安装entware环境"
 }
+
+[ -x /opt/bin/zsh ] && {
+	echo '/opt/bin/zsh' >> /etc/shells
+	ln -s /opt/root/.zsh* /root/
+	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "设置默认shell zsh"
+	sed -i '/^root/s/[^:]*$/\/opt\/bin\/zsh/' /etc/passwd
+}
+[ -x /opt/bin/bash ] && {
+	echo '/opt/bin/bash' >> /etc/shells
+	ln -s /opt/root/.bash* /root/
+}
+
 
 dump222(){			#定义函数多行注释
 if [ -s /mnt/sda1/lost\+found/init.sh ]; then {
