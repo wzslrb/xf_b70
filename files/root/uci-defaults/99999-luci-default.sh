@@ -39,7 +39,7 @@ sed -i 's/.*localhost ip6.*/& h/g' /etc/hosts
 #echo -e '192.168.199.1\th' >> /etc/hosts
 echo  "${tag}" "【${tit}】$((h4=h4+1))：" "主机短别名 h"
 
-[ -z "$(uci get uhttpd.main.listen_https 2>/dev/null)" ] && {
+[ -z "$(uci -q get uhttpd.main.listen_https)" ] && {
 uci add_list uhttpd.main.listen_https='0.0.0.0:443'
 uci add_list uhttpd.main.listen_https='[::]:443'
 uci commit uhttpd
@@ -65,9 +65,6 @@ echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改root密码"
 #	ln -nsf /mnt/sda1/portal/wifidog /www/wifidog		'none'
 }
 
-[ -x "/mnt/sda1/portal/pause" ] && cp /mnt/sda1/portal/pause /usr/bin/
-
-
 #修改证书权限
 uci delete dropbear.@dropbear[0].Interface
 uci set dropbear.@dropbear[0].PasswordAuth='on'
@@ -81,6 +78,10 @@ uci commit dropbear
 [ -d "/mnt/sda1/opt/var/opkg-list" ] && {
 	sed -i '/^lists_dir/s/.*/lists_dir ext \/opt\/var\/opkg-list/' /etc/opkg.conf
 	echo 'dest udisk /mnt/sda1/bin' >> /etc/opkg.conf
+	echo 'option check_signature 0' >> /etc/opkg.conf
+	echo 'arch all 100' >> /etc/opkg.conf
+	echo 'arch mipsel-3x 150' >> /etc/opkg.conf					# ramips 200
+	echo 'arch mipsel-3.4 160' >> /etc/opkg.conf				# ramips_24kec 300
 	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改opkg.conf"
 }
 
@@ -103,19 +104,32 @@ debuglog=/mnt/sda1/portal/ssh/99-hotplug.sh
 }
 
 [ -x /mnt/sda1/opt/onmp/in.sh ] && {
-	sh /mnt/sda1/opt/onmp/in.sh >/dev/null 2>&1
+	#  sh /mnt/sda1/opt/onmp/in.sh >/dev/null 2>&1
+	ln -sf "/mnt/sda1/opt" /opt
+	cp -f /opt/onmp/entware_start.sh /etc/init.d/entware
+	ln -s /etc/init.d/entware /etc/rc.d/S99entware
 	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "安装entware环境"
 }
 
+which php-cgi && {
+	uci add_list uhttpd.main.interpreter=".php=`which php-cgi`"
+	uci add_list uhttpd.main.index_page="index.php"
+	uci commit uhttpd
+}
 [ -x /opt/bin/zsh ] && {
 	echo '/opt/bin/zsh' >> /etc/shells
 	ln -s /opt/root/.zsh* /root/
-	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "设置默认shell zsh"
-	sed -i '/^root/s/[^:]*$/\/opt\/bin\/zsh/' /etc/passwd
+	#zsh安装 for ss in /opt/root/.zprezto/runcoms/^R*;do echo ln -sf ${ss} ~/.${ss:t}; done 替换 $(basename $0) ${0##*/}
+	#find /opt/root/.zprezto/runcoms/ ! -name RE* -type f -exec bash -c 'ln -sf $0 ~/.${0##*/}' "{}" \;
+	ln -sf /opt/share/zprezto/runcoms/zshrc ~/.zshrc
 }
 [ -x /opt/bin/bash ] && {
 	echo '/opt/bin/bash' >> /etc/shells
 	ln -s /opt/root/.bash* /root/
+}
+[ -x /bin/bash ] && {
+	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "设置默认shell bash"
+	chsh -s /bin/bash || sed -i '/^root/s/[^:]*$/\/bin\/bash/' /etc/passwd
 }
 
 

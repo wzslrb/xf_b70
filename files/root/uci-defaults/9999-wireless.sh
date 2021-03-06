@@ -14,7 +14,8 @@ if [ -f "/etc/config/wireless" ]; then {
 uci -q batch <<-EOF >/dev/null
 	set wireless.radio0.country=CN
 	set wireless.radio0.channel='9'
-	set wireless.radio0.txpower=9
+	set wireless.radio0.legacy_rates=1
+	set wireless.radio0.mu_beamformer=0
 	set wireless.radio1.country=CN
 	set wireless.radio1.disabled='1'
 	delete wireless.@wifi-iface[0]
@@ -35,8 +36,13 @@ uci -q batch <<-EOF >/dev/null
 	set wireless.wf1.mode='ap'
 	set wireless.wf1.encryption='none'
 	set wireless.wf1.ssid='8200·7200·0200·160·4400'
-	set wireless.wf1.network='lan'
 	set wireless.wf1.isolate='1'
+	set wireless.wf1.network=wan6
+	set wireless.wf1.wds=1
+	set wireless.wf1.macfilter=allow
+	add_list wireless.wf1.maclist=00:00:88:88:00:00
+	add_list wireless.wf1.maclist=78:d3:8d:02:7d:4a
+	add_list wireless.wf1.maclist=14:9d:09:17:a3:1c
 	set wireless.wf2=wifi-iface
 	set wireless.wf2.device='radio0'
 	set wireless.wf2.mode='ap'
@@ -44,13 +50,19 @@ uci -q batch <<-EOF >/dev/null
 	set wireless.wf2.ssid='8200·7200·0200·160·4400'
 	set wireless.wf2.network='lan'
 	set wireless.wf2.isolate='1'
+	set wireless.wf2.macfilter=deny
 	set wireless.wf3=wifi-iface
 	set wireless.wf3.device='radio0'
 	set wireless.wf3.mode='ap'
 	set wireless.wf3.encryption='none'
 	set wireless.wf3.ssid='8200·7200·0200·160·4400'
-	set wireless.wf3.network='lan'
 	set wireless.wf3.isolate='1'
+	set wireless.wf3.network='wan'
+	set wireless.wf3.wds=1
+	set wireless.wf3.macfilter=allow
+	add_list wireless.wf3.maclist=00:00:44:44:00:00
+	add_list wireless.wf3.maclist=78:d3:8d:02:7d:4a
+	add_list wireless.wf3.maclist=14:9d:09:17:a3:1c
 	commit wireless
 EOF
 	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "diy无线配置文件"

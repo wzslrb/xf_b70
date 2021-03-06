@@ -41,6 +41,9 @@ uci -q batch <<-EOF >/dev/null
 	set AdGuardHome.@AdGuardHome[0].configpath='/usr/bin/AdGuardHome/AdG112.yaml'
 	set AdGuardHome.AdGuardHome.logfile='/usr/bin/AdGuardHome/AdGuardHome.log'
 	set AdGuardHome.AdGuardHome.verbose='0'
+	#set AdGuardHome.binmtime=1613384750
+	set AdGuardHome.crontab=autoupdate cutquerylog cutruntimelog
+	#set AdGuardHome.version=v0.105.0
 	commit AdGuardHome
 	#cachesize='0' 不缓冲
 	set dhcp.@dnsmasq[0].cachesize='0'
@@ -51,11 +54,47 @@ echo  "${tag}" "【${tit}】$((h4=h4+1))：" "重设AdGuardHome"
 
 [ -s "/usr/share/AdGuardHome/links.txt" ] && {
 sed -i '/\.tar\.gz/s/\.tar/_softfloat\.tar/' /usr/share/AdGuardHome/links.txt
-echo  "${tag}" "【${tit}】$((h4=h4+1))：" "更新AdGuard Home升级路径"
+grep -q 'AdGuardHome' /etc/crontabs/root || {
+echo '10 6 * * * /usr/share/AdGuardHome/update_core.sh 2>&1' >> /etc/crontabs/root
+echo '0 * * * * /usr/share/AdGuardHome/tailto.sh 2000 /usr/bin/AdGuardHome/data/querylog.json' >> /etc/crontabs/root
+echo '15 6 * * * /usr/share/AdGuardHome/tailto.sh 2000 /usr/bin/AdGuardHome/AdGuardHome.log' >> /etc/crontabs/root
+}
+
+echo  "${tag}" "【${tit}】$((h4=h4+1))：" "更新AdGuard Home升级路径及计划任务"
 }
 
 rm -f /usr/bin/AdGuardHome/AdGuardHome.log && {
 echo  "${tag}" "【${tit}】$((h4=h4+1))：" "清除AdGuardHome.log"
 }
 
+[ -f "/etc/init.d/adbyby" ] && {
+uci -q batch <<-EOF >/dev/null
+	set adbyby.@adbyby[0]=adbyby
+	set adbyby.@adbyby[0].daemon='2'
+	set adbyby.@adbyby[0].lan_mode='0'
+	set adbyby.@adbyby[0].cron_mode='1'
+	set adbyby.@adbyby[0].enable='1'
+	set adbyby.@adbyby[0].wan_mode='1'
+	set adbyby.@adbyby[0].mem_mode='1'
+	set adbyby.@adbyby[0].update_source='1'
+	set adbyby.@adbyby[0].block_ios='1'
+	set adbyby.@adbyby[0].block_cnshort='1'
+	add_list adbyby.@adbyby[0].subscribe_url='https://easylist-downloads.adblockplus.org/easylistchina.txt'
+	add_list adbyby.@adbyby[0].subscribe_url='https://easylist-downloads.adblockplus.org/easylist.txt'
+	add_list adbyby.@adbyby[0].subscribe_url='https://easylist-downloads.adblockplus.org/easyprivacy.txt'
+	add_list adbyby.@adbyby[0].subscribe_url='https://raw.githubusercontent.com/cjx82630/cjxlist/master/cjx-annoyance.txt'
+	add_list adbyby.@adbyby[0].subscribe_url='https://easylist-downloads.adblockplus.org/fanboy-social.txt'
+	add_list adbyby.@adbyby[0].subscribe_url='https://www.i-dont-care-about-cookies.eu/abp/'
+	add adbyby acl_rule
+	set adbyby.@acl_rule[-1].ipaddr='192.168.199.135'
+	set adbyby.@acl_rule[-1].filter_mode='global'
+	add adbyby acl_rule
+	set adbyby.@acl_rule[-1].ipaddr='192.168.199.194'
+	set adbyby.@acl_rule[-1].filter_mode='global'
+	commit adbyby
+EOF
+grep -q 'ys168.com' /usr/share/adbyby/adhost.conf || sed -i '$a\ys168.com' /usr/share/adbyby/adhost.conf
+grep -q 'adblock.sh' /etc/crontabs/root || echo '12 6 * * * /usr/share/adbyby/adblock.sh > /tmp/adupdate.log 2>&1' >> /etc/crontabs/root
+echo  "${tag}" "【${tit}】$((h4=h4+1))：" "广告屏蔽大师 Plus"
+}
 exit 0
