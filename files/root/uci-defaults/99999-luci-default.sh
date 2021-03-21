@@ -65,23 +65,13 @@ echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改root密码"
 #	ln -nsf /mnt/sda1/portal/wifidog /www/wifidog		'none'
 }
 
-#修改证书权限
-uci delete dropbear.@dropbear[0].Interface
-uci set dropbear.@dropbear[0].PasswordAuth='on'
-uci commit dropbear
-[ -d "/mnt/sda1/opt/etc/dropbear/" ] && {
-	cp /mnt/sda1/opt/etc/dropbear/* /etc/dropbear/
-	chmod 0400 /etc/dropbear/id_rsa
-	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改SSH证书权限"
-}
-
 [ -d "/mnt/sda1/opt/var/opkg-list" ] && {
 	sed -i '/^lists_dir/s/.*/lists_dir ext \/opt\/var\/opkg-list/' /etc/opkg.conf
-	echo 'dest udisk /mnt/sda1/bin' >> /etc/opkg.conf
-	echo 'option check_signature 0' >> /etc/opkg.conf
-	echo 'arch all 100' >> /etc/opkg.conf
-	echo 'arch mipsel-3x 150' >> /etc/opkg.conf					# ramips 200
-	echo 'arch mipsel-3.4 160' >> /etc/opkg.conf				# ramips_24kec 300
+	echo 'dest usb /mnt/sda1/bin' >> /etc/opkg.conf
+	# echo 'option check_signature 0' >> /etc/opkg.conf
+	# echo 'arch all 100' >> /etc/opkg.conf
+	# echo 'arch mipsel-3x 150' >> /etc/opkg.conf					# ramips 200
+	# echo 'arch mipsel-3.4 160' >> /etc/opkg.conf				# ramips_24kec 300
 	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改opkg.conf"
 }
 
@@ -107,7 +97,7 @@ debuglog=/mnt/sda1/portal/ssh/99-hotplug.sh
 	#  sh /mnt/sda1/opt/onmp/in.sh >/dev/null 2>&1
 	ln -sf "/mnt/sda1/opt" /opt
 	cp -f /opt/onmp/entware_start.sh /etc/init.d/entware
-	ln -s /etc/init.d/entware /etc/rc.d/S99entware
+	echo ". /opt/etc/profile" >> /etc/profile
 	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "安装entware环境"
 }
 
@@ -130,6 +120,16 @@ which php-cgi && {
 [ -x /bin/bash ] && {
 	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "设置默认shell bash"
 	chsh -s /bin/bash || sed -i '/^root/s/[^:]*$/\/bin\/bash/' /etc/passwd
+}
+
+#修改证书权限
+uci delete dropbear.@dropbear[0].Interface
+uci set dropbear.@dropbear[0].PasswordAuth='on'
+uci commit dropbear
+[ -d "/opt/root/.ssh" ] && {
+	ln -sf /opt/root/.ssh ~/.ssh
+	cat ~/.ssh/id_rsa.pub >> /etc/dropbear/authorized_keys
+	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "修改SSH 私匙登录"
 }
 
 

@@ -6,10 +6,11 @@ export tit="FtpSamAdg"
 
 
 [ -x "/etc/init.d/vsftpd" ] && {
-uci set vsftpd.listen.pasv_min_port='50000'
-uci set vsftpd.listen.pasv_max_port='51000'
-uci commit vsftpd
-echo  "${tag}" "【${tit}】$((h4=h4+1))：" "重设vsftpd"
+cp -f /mnt/sda1/opt/etc/vsftpd/vsftpd.conf /etc/vsftpd.conf
+mkdir -p /etc/vsftpd/
+cp -f /mnt/sda1/opt/etc/vsftpd/*.pem /etc/vsftpd/
+/etc/init.d/vsftpd enable
+echo  "${tag}" "【${tit}】$((h4=h4+1))：" "重设vsftpd-tls"
 }
 
 [ -f "/etc/config/sqm" ] && {
@@ -25,9 +26,9 @@ uci commit sqm
 echo  "${tag}" "【${tit}】$((h4=h4+1))：" "重设sqm"
 }
 
-[ -d /mnt/sda1/lost\+found/AdGuardHome ] && {
+[ -d /mnt/sda1/opt/share/AdGuardHome ] && {
 	[ -d /usr/bin/AdGuardHome ] && rm -rf /usr/bin/AdGuardHome
-	ln -nsf /mnt/sda1/lost\+found/AdGuardHome /usr/bin/AdGuardHome
+	ln -nsf /mnt/sda1/opt/share/AdGuardHome /usr/bin/AdGuardHome
 	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "重设AdGuardHome目录链接"
 }
 
@@ -40,9 +41,11 @@ uci -q batch <<-EOF >/dev/null
 	set AdGuardHome.@AdGuardHome[0].redirect='redirect'
 	set AdGuardHome.@AdGuardHome[0].configpath='/usr/bin/AdGuardHome/AdG112.yaml'
 	set AdGuardHome.AdGuardHome.logfile='/usr/bin/AdGuardHome/AdGuardHome.log'
+	set AdGuardHome.AdGuardHome.workdir='/usr/bin/AdGuardHome'
+	set AdGuardHome.AdGuardHome.binpath='/usr/bin/AdGuardHome/AdGuardHome'
 	set AdGuardHome.AdGuardHome.verbose='0'
+	set AdGuardHome.AdGuardHome.crontab='autoupdate cutquerylog cutruntimelog'
 	#set AdGuardHome.binmtime=1613384750
-	set AdGuardHome.crontab=autoupdate cutquerylog cutruntimelog
 	#set AdGuardHome.version=v0.105.0
 	commit AdGuardHome
 	#cachesize='0' 不缓冲
@@ -51,6 +54,7 @@ uci -q batch <<-EOF >/dev/null
 EOF
 echo  "${tag}" "【${tit}】$((h4=h4+1))：" "重设AdGuardHome"
 }
+# run: /usr/bin/AdGuardHome/AdGuardHome -c /usr/bin/AdGuardHome/AdG112.yaml -w /usr/bin/AdGuardHome -p 3600 -l /usr/bin/AdGuardHome/AdGuardHome.log
 
 [ -s "/usr/share/AdGuardHome/links.txt" ] && {
 sed -i '/\.tar\.gz/s/\.tar/_softfloat\.tar/' /usr/share/AdGuardHome/links.txt

@@ -35,7 +35,7 @@ uci -q batch <<-EOF >/dev/null
 	set wireless.wf1.device='radio0'
 	set wireless.wf1.mode='ap'
 	set wireless.wf1.encryption='none'
-	set wireless.wf1.ssid='8200·7200·0200·160·4400'
+	set wireless.wf1.ssid='77820·16500·4400·03820'
 	set wireless.wf1.isolate='1'
 	set wireless.wf1.network=wan6
 	set wireless.wf1.wds=1
@@ -47,7 +47,7 @@ uci -q batch <<-EOF >/dev/null
 	set wireless.wf2.device='radio0'
 	set wireless.wf2.mode='ap'
 	set wireless.wf2.encryption='none'
-	set wireless.wf2.ssid='8200·7200·0200·160·4400'
+	set wireless.wf2.ssid='77820·16500·4400·03820'
 	set wireless.wf2.network='lan'
 	set wireless.wf2.isolate='1'
 	set wireless.wf2.macfilter=deny
@@ -55,7 +55,7 @@ uci -q batch <<-EOF >/dev/null
 	set wireless.wf3.device='radio0'
 	set wireless.wf3.mode='ap'
 	set wireless.wf3.encryption='none'
-	set wireless.wf3.ssid='8200·7200·0200·160·4400'
+	set wireless.wf3.ssid='77820·16500·4400·03820'
 	set wireless.wf3.isolate='1'
 	set wireless.wf3.network='wan'
 	set wireless.wf3.wds=1
