@@ -12,7 +12,7 @@ if [ -x "/etc/init.d/zerotier" ]; then
 	[ -d /mnt/sda1/opt/etc/confit/zero ] && {
 		rm -rf /etc/config/zero
 		ln -s /mnt/sda1/opt/etc/confit/zero /etc/config/zero
-		cp -f /mnt/sda1/opt/etc/zerotier.sh /etc/zerotier.start
+		cp -f /mnt/sda1/opt/etc/zerotier.st* /etc/
 		chmod +x /etc/zerotier.start
 	}
 	echo  "${tag}" "【${tit}】$((h4=h4+1))：" "zerotier初始化"
